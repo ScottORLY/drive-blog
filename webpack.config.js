@@ -10,7 +10,7 @@ module.exports = {
     ],
     output: {
         path: __dirname + '/docs',
-        publicPath: '/',
+        publicPath: '/drive-blog',
         filename: 'bundle.js'
     },
     optimization: {
@@ -79,19 +79,15 @@ module.exports = {
                 use: ['file-loader']
             },
             {
-              test: /\.(woff(2)?|ttf|eot|svg|csv)(\?v=\d+\.\d+\.\d+)?$/,
-              use: [{
-                  loader: 'file-loader',
-                  options: {
-                      name: '[name].[ext]',
-                      outputPath: 'fonts/'
-                  }
-              }]
-          }
+                test: /\.(woff|woff2)$/,
+                use: {
+                  loader: 'url-loader',
+                }
+            }
         ]
     },
     devServer: {
-        contentBase: './dist',
+        contentBase: './docs',
         compress: true,
         historyApiFallback: true
     }
