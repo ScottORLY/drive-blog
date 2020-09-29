@@ -45,7 +45,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dist": "webpack --config webpack.config.js --mode production",
+    "dist": "rm -rf docs/ && webpack --config webpack.config.js --mode production",
     "start": "NODE_ENV=development webpack-dev-server --mode development"
   },
   "keywords": [],
