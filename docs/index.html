@@ -1,1 +1,1161 @@
-<!doctype html><html><head><title>Drive</title><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta charset="utf-8"><meta name="twitter:title" content="Drive"><meta name="twitter:description" content="Functional Reactive Form Validation in iOS with RxSwift"><meta name="twitter:image" content="https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/drive.jpg"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="https://scottorly.github.io/drive-blog/"><meta name="twitter:creator" content="@orlyck"><meta property="og:url" content="https://scottorly.github.io/drive-blog/"><meta property="og:title" content="Drive"><meta property="og:description" content="Functional Reactive Form Validation in iOS with RxSwift"><meta property="og:image" content="https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/drive.jpg"><meta property="og:image:secure" content="https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/drive.jpg"><link href="/drive-blog/main.74caa9a31ab9efe750dd.css" rel="stylesheet"></head></html><script src="/drive-blog/bundle.js"></script>
+<!DOCTYPE html><html><head>
+        <title>Drive</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <meta charset="utf-8">
+        <meta name="twitter:title" content="Drive">
+        <meta name="twitter:description" content="Functional Reactive Form Validation in iOS with RxSwift">
+        <meta name="twitter:image" content="https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/drive.jpg">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:site" content="https://scottorly.github.io/drive-blog/">
+        <meta name="twitter:creator" content="@orlyck">
+        <meta property="og:url" content="https://scottorly.github.io/drive-blog/">
+        <meta property="og:title" content="Drive">
+        <meta property="og:description" content="Functional Reactive Form Validation in iOS with RxSwift">
+        <meta property="og:image" content="https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/drive.jpg">
+        <meta property="og:image:secure" content="https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/drive.jpg">
+    <style>@import url(https://rsms.me/inter/inter.css);</style><style>html{font-family:Inter,sans-serif}@supports (font-variation-settings:normal){html{font-family:Inter var,sans-serif}}html{--bg-opacity:1;background-color:#f7fafc;background-color:rgba(247,250,252,var(--bg-opacity));--text-opacity:1;color:#1a202c;color:rgba(26,32,44,var(--text-opacity))}#app__1hgMo{padding-left:2rem;padding-right:2rem;margin-bottom:3rem;max-width:48rem;display:flex;flex-direction:column}#app__1hgMo,.img__2eUsJ{margin-left:auto;margin-right:auto}.img__2eUsJ{-o-object-fit:contain;object-fit:contain;max-width:100%;float:right;border-radius:.5rem}h{margin-top:.75rem;margin-bottom:.75rem}h1{font-family:Inter Black,sans-serif}p{text-indent:1rem;line-height:1.5rem}.gist__11fu1,p{margin-top:.75rem;margin-bottom:.75rem}.noIndent__2mYg_{text-indent:0}.right__1_mIR{float:right;margin-left:1rem}.inlineCode__2dlzF{display:inline;--bg-opacity:1;background-color:#4a5568;background-color:rgba(74,85,104,var(--bg-opacity));--text-opacity:1;color:#f7fafc;color:rgba(247,250,252,var(--text-opacity));padding:.25rem;border-radius:.375rem;font-size:.875rem}.list__DN-zw{list-style-type:none}</style></head>
+<body>
+<div id="app__1hgMo"><h1><i>Drive</i></h1><h2>Functional Reactive Form Validation in iOS with RxSwift</h2><h4>by <a href="https://github.com/ScottORLY">Scott Orlyck</a></h4><img class="img__2eUsJ" src="https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/drive.jpg" alt="Ryan Gosling with a Dispose Bag"><p><a href="https://www.youtube.com/watch?v=KBiOF3y1W0Y"><i>Drive, 2011</i></a></p><h2>Introduction</h2><p>This blog post is intended for readers with some measure of familiarity with iOS development, functional reactive programming and alternative iOS architecture patterns. If not here are some resources to get started.<ul class="list__DN-zw"><li><a href="http://reactivex.io/">ReactiveX</a></li><li><a href="https://github.com/ReactiveX/RxSwift">RxSwift</a></li><li><a href="https://www.raywenderlich.com/34-design-patterns-by-tutorials-mvvm">MVVM</a></li></ul></p><h2>Why Drive?</h2><p>SwiftUI has been getting all the love since it was announced but I want to take some time to write about the productivity benefits of functional reactive programming using RxSwift when combined with the stability of UIKit.</p><p>Observables are excellent for escaping target-action, delegate based MVC patterns but even after the steep learning curve remembering tedious boilerplate and dodging footguns can be time consuming and error prone. Furthermore type inference across API boundaries can result in frustrating fights with the Swift compiler.</p><p>An example from the RxSwift documentation is an effective demonstration of the implementation complexity faced when using Rx with UIKit.</p><div class="gist__11fu1"><div id="gist105469781" class="gist">
+    <div class="gist-file">
+      <div class="gist-data">
+        <div class="js-gist-file-update-container js-task-list-container file-box">
+  <div id="file-subscribe-swift" class="file my-2">
+    
+
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-swift  ">
+      
+<table class="highlight tab-size js-file-line-container" data-tab-size="8" data-paste-markdown-skip="">
+      <tbody><tr>
+        <td id="file-subscribe-swift-L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="file-subscribe-swift-LC1" class="blob-code blob-code-inner js-file-line"><span class="pl-k">let</span> results <span class="pl-k">=</span> query.<span class="pl-smi">rx</span>.<span class="pl-c1">text</span></td>
+      </tr>
+      <tr>
+        <td id="file-subscribe-swift-L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="file-subscribe-swift-LC2" class="blob-code blob-code-inner js-file-line">    .<span class="pl-c1">throttle</span>(.<span class="pl-c1">milliseconds</span>(<span class="pl-c1">300</span>), <span class="pl-c1">scheduler</span>: MainScheduler.<span class="pl-smi">instance</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-subscribe-swift-L3" class="blob-num js-line-number" data-line-number="3"></td>
+        <td id="file-subscribe-swift-LC3" class="blob-code blob-code-inner js-file-line">    .<span class="pl-smi">flatMapLatest</span> { query <span class="pl-k">in</span></td>
+      </tr>
+      <tr>
+        <td id="file-subscribe-swift-L4" class="blob-num js-line-number" data-line-number="4"></td>
+        <td id="file-subscribe-swift-LC4" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">fetchAutoCompleteItems</span>(query)</td>
+      </tr>
+      <tr>
+        <td id="file-subscribe-swift-L5" class="blob-num js-line-number" data-line-number="5"></td>
+        <td id="file-subscribe-swift-LC5" class="blob-code blob-code-inner js-file-line">            .<span class="pl-c1">observeOn</span>(MainScheduler.<span class="pl-smi">instance</span>)  <span class="pl-c"><span class="pl-c">//</span> results are returned on MainScheduler</span></td>
+      </tr>
+      <tr>
+        <td id="file-subscribe-swift-L6" class="blob-num js-line-number" data-line-number="6"></td>
+        <td id="file-subscribe-swift-LC6" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span>            .<span class="pl-c1">catchErrorJustReturn</span>([])           <span class="pl-c"><span class="pl-c">//</span> in the worst case, errors are handled</span></td>
+      </tr>
+      <tr>
+        <td id="file-subscribe-swift-L7" class="blob-num js-line-number" data-line-number="7"></td>
+        <td id="file-subscribe-swift-LC7" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span>    }</td>
+      </tr>
+      <tr>
+        <td id="file-subscribe-swift-L8" class="blob-num js-line-number" data-line-number="8"></td>
+        <td id="file-subscribe-swift-LC8" class="blob-code blob-code-inner js-file-line">    .<span class="pl-c1">share</span>(<span class="pl-c1">replay</span>: <span class="pl-c1">1</span>)                           <span class="pl-c"><span class="pl-c">//</span> HTTP requests are shared and results replayed</span></td>
+      </tr>
+      <tr>
+        <td id="file-subscribe-swift-L9" class="blob-num js-line-number" data-line-number="9"></td>
+        <td id="file-subscribe-swift-LC9" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span>                                                <span class="pl-c"><span class="pl-c">//</span> to all UI elements</span></td>
+      </tr>
+      <tr>
+        <td id="file-subscribe-swift-L10" class="blob-num js-line-number" data-line-number="10"></td>
+        <td id="file-subscribe-swift-LC10" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span></td>
+      </tr>
+      <tr>
+        <td id="file-subscribe-swift-L11" class="blob-num js-line-number" data-line-number="11"></td>
+        <td id="file-subscribe-swift-LC11" class="blob-code blob-code-inner js-file-line">results</td>
+      </tr>
+      <tr>
+        <td id="file-subscribe-swift-L12" class="blob-num js-line-number" data-line-number="12"></td>
+        <td id="file-subscribe-swift-LC12" class="blob-code blob-code-inner js-file-line">    .<span class="pl-c1">map</span> { <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pse">\(</span><span class="pl-s1"><span class="pl-c1">$0</span>.<span class="pl-c1">count</span></span><span class="pl-pse"><span class="pl-s1">)</span></span><span class="pl-pds">"</span></span> }</td>
+      </tr>
+      <tr>
+        <td id="file-subscribe-swift-L13" class="blob-num js-line-number" data-line-number="13"></td>
+        <td id="file-subscribe-swift-LC13" class="blob-code blob-code-inner js-file-line">    .<span class="pl-c1">bind</span>(<span class="pl-c1">to</span>: resultCount.<span class="pl-smi">rx</span>.<span class="pl-c1">text</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-subscribe-swift-L14" class="blob-num js-line-number" data-line-number="14"></td>
+        <td id="file-subscribe-swift-LC14" class="blob-code blob-code-inner js-file-line">    .<span class="pl-c1">disposed</span>(<span class="pl-c1">by</span>: disposeBag)</td>
+      </tr>
+</tbody></table>
+
+
+  </div>
+
+  </div>
+</div>
+
+      </div>
+      <div class="gist-meta">
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8/raw/0008fc09447d817ecdc92a3622a518718afd515c/subscribe.swift" style="float:right">view raw</a>
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8#file-subscribe-swift">subscribe.swift</a>
+        hosted with ❤ by <a href="https://github.com">GitHub</a>
+      </div>
+    </div>
+</div>
+</div><p>Thankfully RxSwift provides us with some wrappers around common RxSwift UI patterns that can help simplify implementations. RxSwift calls these wrappers <a hre="">traits</a> and today we are going to focus on the <a href="https://github.com/ReactiveX/RxSwift/blob/main/Documentation/Traits.md#driver">Driver</a> trait.</p><p>RxSwift Traits are simple structs that implement the builder pattern to return an observable sequence guaranteed to have certain properties. The Driver trait guarantees three properties that happen to be integral to correct UI implementations: events are observed on the main thread, the observable sequence can't error out, and side effects are shared so that each subscription will share the same computational resources.</p><div class="gist__11fu1"><div id="gist105469781" class="gist">
+    <div class="gist-file">
+      <div class="gist-data">
+        <div class="js-gist-file-update-container js-task-list-container file-box">
+  <div id="file-rxdrive-swift" class="file my-2">
+    
+
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-swift  ">
+      
+<table class="highlight tab-size js-file-line-container" data-tab-size="8" data-paste-markdown-skip="">
+      <tbody><tr>
+        <td id="file-rxdrive-swift-L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="file-rxdrive-swift-LC1" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">//</span>https://github.com/ReactiveX/RxSwift/blob/main/Documentation/Traits.md#driver</span></td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="file-rxdrive-swift-LC2" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span></td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L3" class="blob-num js-line-number" data-line-number="3"></td>
+        <td id="file-rxdrive-swift-LC3" class="blob-code blob-code-inner js-file-line"><span class="pl-k">let</span> safeSequence <span class="pl-k">=</span> xs</td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L4" class="blob-num js-line-number" data-line-number="4"></td>
+        <td id="file-rxdrive-swift-LC4" class="blob-code blob-code-inner js-file-line">  .<span class="pl-c1">observeOn</span>(MainScheduler.<span class="pl-smi">instance</span>)        <span class="pl-c"><span class="pl-c">//</span> observe events on main scheduler</span></td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L5" class="blob-num js-line-number" data-line-number="5"></td>
+        <td id="file-rxdrive-swift-LC5" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span>  .<span class="pl-c1">catchErrorJustReturn</span>(onErrorJustReturn)  <span class="pl-c"><span class="pl-c">//</span> can't error out</span></td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L6" class="blob-num js-line-number" data-line-number="6"></td>
+        <td id="file-rxdrive-swift-LC6" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span>  .<span class="pl-c1">share</span>(<span class="pl-c1">replay</span>: <span class="pl-c1">1</span>, <span class="pl-c1">scope</span>: .<span class="pl-smi">whileConnected</span>) <span class="pl-c"><span class="pl-c">//</span> side effects sharing</span></td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L7" class="blob-num js-line-number" data-line-number="7"></td>
+        <td id="file-rxdrive-swift-LC7" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span></td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L8" class="blob-num js-line-number" data-line-number="8"></td>
+        <td id="file-rxdrive-swift-LC8" class="blob-code blob-code-inner js-file-line"><span class="pl-k">return</span> <span class="pl-c1">Driver</span>(<span class="pl-c1">raw</span>: safeSequence)            <span class="pl-c"><span class="pl-c">//</span> wrap it up</span></td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L9" class="blob-num js-line-number" data-line-number="9"></td>
+        <td id="file-rxdrive-swift-LC9" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span></td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L10" class="blob-num js-line-number" data-line-number="10"></td>
+        <td id="file-rxdrive-swift-LC10" class="blob-code blob-code-inner js-file-line"><span class="pl-k">let</span> results <span class="pl-k">=</span> query.<span class="pl-smi">rx</span>.<span class="pl-c1">text</span>.<span class="pl-c1">asDriver</span>()      <span class="pl-c"><span class="pl-c">//</span> This converts a normal sequence into a `Driver` sequence.</span></td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L11" class="blob-num js-line-number" data-line-number="11"></td>
+        <td id="file-rxdrive-swift-LC11" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span>    .<span class="pl-c1">throttle</span>(.<span class="pl-c1">milliseconds</span>(<span class="pl-c1">300</span>), <span class="pl-c1">scheduler</span>: MainScheduler.<span class="pl-smi">instance</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L12" class="blob-num js-line-number" data-line-number="12"></td>
+        <td id="file-rxdrive-swift-LC12" class="blob-code blob-code-inner js-file-line">    .<span class="pl-smi">flatMapLatest</span> { query <span class="pl-k">in</span></td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L13" class="blob-num js-line-number" data-line-number="13"></td>
+        <td id="file-rxdrive-swift-LC13" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">fetchAutoCompleteItems</span>(query)</td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L14" class="blob-num js-line-number" data-line-number="14"></td>
+        <td id="file-rxdrive-swift-LC14" class="blob-code blob-code-inner js-file-line">            .<span class="pl-c1">asDriver</span>(<span class="pl-c1">onErrorJustReturn</span>: [])  <span class="pl-c"><span class="pl-c">//</span> Builder just needs info about what to return in case of error.</span></td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L15" class="blob-num js-line-number" data-line-number="15"></td>
+        <td id="file-rxdrive-swift-LC15" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span>    }</td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L16" class="blob-num js-line-number" data-line-number="16"></td>
+        <td id="file-rxdrive-swift-LC16" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L17" class="blob-num js-line-number" data-line-number="17"></td>
+        <td id="file-rxdrive-swift-LC17" class="blob-code blob-code-inner js-file-line">results</td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L18" class="blob-num js-line-number" data-line-number="18"></td>
+        <td id="file-rxdrive-swift-LC18" class="blob-code blob-code-inner js-file-line">    .<span class="pl-c1">map</span> { <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pse">\(</span><span class="pl-s1"><span class="pl-c1">$0</span>.<span class="pl-c1">count</span></span><span class="pl-pse"><span class="pl-s1">)</span></span><span class="pl-pds">"</span></span> }</td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L19" class="blob-num js-line-number" data-line-number="19"></td>
+        <td id="file-rxdrive-swift-LC19" class="blob-code blob-code-inner js-file-line">    .<span class="pl-c1">drive</span>(resultCount.<span class="pl-smi">rx</span>.<span class="pl-c1">text</span>)            <span class="pl-c"><span class="pl-c">//</span> If there is a `drive` method available instead of `bind(to:)`,</span></td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L20" class="blob-num js-line-number" data-line-number="20"></td>
+        <td id="file-rxdrive-swift-LC20" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span>    .<span class="pl-c1">disposed</span>(<span class="pl-c1">by</span>: disposeBag)              <span class="pl-c"><span class="pl-c">//</span> that means that the compiler has proven that all properties</span></td>
+      </tr>
+      <tr>
+        <td id="file-rxdrive-swift-L21" class="blob-num js-line-number" data-line-number="21"></td>
+        <td id="file-rxdrive-swift-LC21" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span>                                           <span class="pl-c"><span class="pl-c">//</span> are satisfied.</span></td>
+      </tr>
+</tbody></table>
+
+
+  </div>
+
+  </div>
+</div>
+
+      </div>
+      <div class="gist-meta">
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8/raw/0008fc09447d817ecdc92a3622a518718afd515c/RxDrive.swift" style="float:right">view raw</a>
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8#file-rxdrive-swift">RxDrive.swift</a>
+        hosted with ❤ by <a href="https://github.com">GitHub</a>
+      </div>
+    </div>
+</div>
+</div><p class="noIndent__2mYg_">Let's take a closer look at a practical example.</p><h2>Real Time UITextfield Validation</h2><div><img class="img__2eUsJ right__1_mIR" src="https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/validation.gif"><div><p>Form validation that provides the user with immediate feedback if a text field meets predefined requirements is a common UX pattern and this example will show you how you can use the Driver trait for effective results with a very small amount of clean, testable code.</p><p>For the purpose of narrowing the focus of this article I won't be going over project setup, how to connect outlets in storyboards, the basics of RxSwift/RxCocoa etc. I will also be handwaving the networking, validation and network activity tracking utilities as those implementation details are outside the scope of this article. The working project source code is available <a href="https://github.com/ScottORLY/drive">here</a> if you would like to take a closer look or test a working example on a simulator or device.</p></div></div><p>This project will use MVVM but there are a few ground rules to help enforce seperation of concerns:<ol type="1" class="list__DN-zw"><li>The ViewModel can never import UIKit or reference the ViewController.</li><li>The ViewModel will never subscribe to an observable.</li><li>The ViewController will never directly call any methods defined on the ViewModel.</li></ol></p><p>First we define inputs to the ViewModel. The initializer for our new ViewModel class below takes a pair of <span class="inlineCode__2dlzF">Driver&lt;String&gt;</span> for the email and password and a <span class="inlineCode__2dlzF">Driver&lt;Void&gt;</span> for the sign in button tap. We are not going to explicitly store references to these sequences.</p><div class="gist__11fu1"><div id="gist105469781" class="gist">
+    <div class="gist-file">
+      <div class="gist-data">
+        <div class="js-gist-file-update-container js-task-list-container file-box">
+  <div id="file-init-swift" class="file my-2">
+    
+
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-swift  ">
+      
+<table class="highlight tab-size js-file-line-container" data-tab-size="8" data-paste-markdown-skip="">
+      <tbody><tr>
+        <td id="file-init-swift-L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="file-init-swift-LC1" class="blob-code blob-code-inner js-file-line"><span class="pl-k">import</span> <span class="pl-en">Foundation</span></td>
+      </tr>
+      <tr>
+        <td id="file-init-swift-L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="file-init-swift-LC2" class="blob-code blob-code-inner js-file-line"><span class="pl-k">import</span> <span class="pl-en">RxSwift</span></td>
+      </tr>
+      <tr>
+        <td id="file-init-swift-L3" class="blob-num js-line-number" data-line-number="3"></td>
+        <td id="file-init-swift-LC3" class="blob-code blob-code-inner js-file-line"><span class="pl-k">import</span> <span class="pl-en">RxCocoa</span></td>
+      </tr>
+      <tr>
+        <td id="file-init-swift-L4" class="blob-num js-line-number" data-line-number="4"></td>
+        <td id="file-init-swift-LC4" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-init-swift-L5" class="blob-num js-line-number" data-line-number="5"></td>
+        <td id="file-init-swift-LC5" class="blob-code blob-code-inner js-file-line"><span class="pl-k">class</span> <span class="pl-en">ViewModel</span> {</td>
+      </tr>
+      <tr>
+        <td id="file-init-swift-L6" class="blob-num js-line-number" data-line-number="6"></td>
+        <td id="file-init-swift-LC6" class="blob-code blob-code-inner js-file-line">  </td>
+      </tr>
+      <tr>
+        <td id="file-init-swift-L7" class="blob-num js-line-number" data-line-number="7"></td>
+        <td id="file-init-swift-LC7" class="blob-code blob-code-inner js-file-line">    <span class="pl-c"><span class="pl-c">//</span>MARK: - Inputs</span></td>
+      </tr>
+      <tr>
+        <td id="file-init-swift-L8" class="blob-num js-line-number" data-line-number="8"></td>
+        <td id="file-init-swift-LC8" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span>  </td>
+      </tr>
+      <tr>
+        <td id="file-init-swift-L9" class="blob-num js-line-number" data-line-number="9"></td>
+        <td id="file-init-swift-LC9" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">init</span>(</td>
+      </tr>
+      <tr>
+        <td id="file-init-swift-L10" class="blob-num js-line-number" data-line-number="10"></td>
+        <td id="file-init-swift-LC10" class="blob-code blob-code-inner js-file-line">        <span class="pl-smi"><span class="pl-en">email</span></span>: Driver&lt;<span class="pl-c1">String</span>&gt;,</td>
+      </tr>
+      <tr>
+        <td id="file-init-swift-L11" class="blob-num js-line-number" data-line-number="11"></td>
+        <td id="file-init-swift-LC11" class="blob-code blob-code-inner js-file-line">        <span class="pl-smi"><span class="pl-en">password</span></span>: Driver&lt;<span class="pl-c1">String</span>&gt;,</td>
+      </tr>
+      <tr>
+        <td id="file-init-swift-L12" class="blob-num js-line-number" data-line-number="12"></td>
+        <td id="file-init-swift-LC12" class="blob-code blob-code-inner js-file-line">        <span class="pl-smi"><span class="pl-en">signIn</span></span>: Driver&lt;<span class="pl-c1">Void</span>&gt;</td>
+      </tr>
+      <tr>
+        <td id="file-init-swift-L13" class="blob-num js-line-number" data-line-number="13"></td>
+        <td id="file-init-swift-LC13" class="blob-code blob-code-inner js-file-line">    ) {</td>
+      </tr>
+      <tr>
+        <td id="file-init-swift-L14" class="blob-num js-line-number" data-line-number="14"></td>
+        <td id="file-init-swift-LC14" class="blob-code blob-code-inner js-file-line">    </td>
+      </tr>
+      <tr>
+        <td id="file-init-swift-L15" class="blob-num js-line-number" data-line-number="15"></td>
+        <td id="file-init-swift-LC15" class="blob-code blob-code-inner js-file-line">    }</td>
+      </tr>
+      <tr>
+        <td id="file-init-swift-L16" class="blob-num js-line-number" data-line-number="16"></td>
+        <td id="file-init-swift-LC16" class="blob-code blob-code-inner js-file-line">}</td>
+      </tr>
+</tbody></table>
+
+
+  </div>
+
+  </div>
+</div>
+
+      </div>
+      <div class="gist-meta">
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8/raw/0008fc09447d817ecdc92a3622a518718afd515c/init.swift" style="float:right">view raw</a>
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8#file-init-swift">init.swift</a>
+        hosted with ❤ by <a href="https://github.com">GitHub</a>
+      </div>
+    </div>
+</div>
+</div><p>In the ViewController we initialize the ViewModel passing in the Observables from the IBOutlets. Note the call to <span class="inlineCode__2dlzF">.asDriver()</span> to build the Drivers from the ControlEvent observables.</p><div class="gist__11fu1"><div id="gist105469781" class="gist">
+    <div class="gist-file">
+      <div class="gist-data">
+        <div class="js-gist-file-update-container js-task-list-container file-box">
+  <div id="file-outlets-swift" class="file my-2">
+    
+
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-swift  ">
+      
+<table class="highlight tab-size js-file-line-container" data-tab-size="8" data-paste-markdown-skip="">
+      <tbody><tr>
+        <td id="file-outlets-swift-L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="file-outlets-swift-LC1" class="blob-code blob-code-inner js-file-line"><span class="pl-k">import</span> <span class="pl-en">UIKit</span></td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="file-outlets-swift-LC2" class="blob-code blob-code-inner js-file-line"><span class="pl-k">import</span> <span class="pl-en">RxSwift</span></td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L3" class="blob-num js-line-number" data-line-number="3"></td>
+        <td id="file-outlets-swift-LC3" class="blob-code blob-code-inner js-file-line"><span class="pl-k">import</span> <span class="pl-en">RxCocoa</span></td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L4" class="blob-num js-line-number" data-line-number="4"></td>
+        <td id="file-outlets-swift-LC4" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L5" class="blob-num js-line-number" data-line-number="5"></td>
+        <td id="file-outlets-swift-LC5" class="blob-code blob-code-inner js-file-line"><span class="pl-k">class</span> <span class="pl-en">ViewController</span>: <span class="pl-e">UIViewController </span>{</td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L6" class="blob-num js-line-number" data-line-number="6"></td>
+        <td id="file-outlets-swift-LC6" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L7" class="blob-num js-line-number" data-line-number="7"></td>
+        <td id="file-outlets-swift-LC7" class="blob-code blob-code-inner js-file-line">    <span class="pl-c"><span class="pl-c">//</span> MARK: - IBOutlets</span></td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L8" class="blob-num js-line-number" data-line-number="8"></td>
+        <td id="file-outlets-swift-LC8" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span></td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L9" class="blob-num js-line-number" data-line-number="9"></td>
+        <td id="file-outlets-swift-LC9" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">@IBOutlet</span> <span class="pl-k">weak</span> <span class="pl-k">var</span> email<span class="pl-k">:</span> UITextField<span class="pl-k">!</span></td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L10" class="blob-num js-line-number" data-line-number="10"></td>
+        <td id="file-outlets-swift-LC10" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">@IBOutlet</span> <span class="pl-k">weak</span> <span class="pl-k">var</span> password<span class="pl-k">:</span> UITextField<span class="pl-k">!</span></td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L11" class="blob-num js-line-number" data-line-number="11"></td>
+        <td id="file-outlets-swift-LC11" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">@IBOutlet</span> <span class="pl-k">weak</span> <span class="pl-k">var</span> signIn<span class="pl-k">:</span> UIButton<span class="pl-k">!</span></td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L12" class="blob-num js-line-number" data-line-number="12"></td>
+        <td id="file-outlets-swift-LC12" class="blob-code blob-code-inner js-file-line">    </td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L13" class="blob-num js-line-number" data-line-number="13"></td>
+        <td id="file-outlets-swift-LC13" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">lazy</span> <span class="pl-k">var</span> viewModel<span class="pl-k">:</span> ViewModel <span class="pl-k">=</span> {</td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L14" class="blob-num js-line-number" data-line-number="14"></td>
+        <td id="file-outlets-swift-LC14" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">ViewModel</span>(<span class="pl-c1">email</span>: email.<span class="pl-smi">rx</span>.<span class="pl-c1">text</span>.<span class="pl-smi">orEmpty</span>.<span class="pl-c1">asDriver</span>(),</td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L15" class="blob-num js-line-number" data-line-number="15"></td>
+        <td id="file-outlets-swift-LC15" class="blob-code blob-code-inner js-file-line">                  <span class="pl-c1">password</span>: password.<span class="pl-smi">rx</span>.<span class="pl-c1">text</span>.<span class="pl-smi">orEmpty</span>.<span class="pl-c1">asDriver</span>(),</td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L16" class="blob-num js-line-number" data-line-number="16"></td>
+        <td id="file-outlets-swift-LC16" class="blob-code blob-code-inner js-file-line">                  <span class="pl-c1">signIn</span>: signIn.<span class="pl-smi">rx</span>.<span class="pl-smi">tap</span>.<span class="pl-c1">asDriver</span>())</td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L17" class="blob-num js-line-number" data-line-number="17"></td>
+        <td id="file-outlets-swift-LC17" class="blob-code blob-code-inner js-file-line">    }()</td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L18" class="blob-num js-line-number" data-line-number="18"></td>
+        <td id="file-outlets-swift-LC18" class="blob-code blob-code-inner js-file-line">    </td>
+      </tr>
+      <tr>
+        <td id="file-outlets-swift-L19" class="blob-num js-line-number" data-line-number="19"></td>
+        <td id="file-outlets-swift-LC19" class="blob-code blob-code-inner js-file-line">}</td>
+      </tr>
+</tbody></table>
+
+
+  </div>
+
+  </div>
+</div>
+
+      </div>
+      <div class="gist-meta">
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8/raw/0008fc09447d817ecdc92a3622a518718afd515c/outlets.swift" style="float:right">view raw</a>
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8#file-outlets-swift">outlets.swift</a>
+        hosted with ❤ by <a href="https://github.com">GitHub</a>
+      </div>
+    </div>
+</div>
+</div><p>Next we define output properties to store the reference to the result of the operator transformations we are going to perform on the input observables.</p><div class="gist__11fu1"><div id="gist105469781" class="gist">
+    <div class="gist-file">
+      <div class="gist-data">
+        <div class="js-gist-file-update-container js-task-list-container file-box">
+  <div id="file-outputs-swift" class="file my-2">
+    
+
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-swift  ">
+      
+<table class="highlight tab-size js-file-line-container" data-tab-size="8" data-paste-markdown-skip="">
+      <tbody><tr>
+        <td id="file-outputs-swift-L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="file-outputs-swift-LC1" class="blob-code blob-code-inner js-file-line"><span class="pl-k">class</span> <span class="pl-en">ViewModel</span> {</td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="file-outputs-swift-LC2" class="blob-code blob-code-inner js-file-line">  </td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L3" class="blob-num js-line-number" data-line-number="3"></td>
+        <td id="file-outputs-swift-LC3" class="blob-code blob-code-inner js-file-line">    <span class="pl-c"><span class="pl-c">//</span>MARK: - Outputs</span></td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L4" class="blob-num js-line-number" data-line-number="4"></td>
+        <td id="file-outputs-swift-LC4" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span></td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L5" class="blob-num js-line-number" data-line-number="5"></td>
+        <td id="file-outputs-swift-LC5" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">let</span> validatedEmail<span class="pl-k">:</span> Driver<span class="pl-k">&lt;</span>Validation<span class="pl-k">&gt;</span></td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L6" class="blob-num js-line-number" data-line-number="6"></td>
+        <td id="file-outputs-swift-LC6" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">let</span> validatedPassword<span class="pl-k">:</span> Driver<span class="pl-k">&lt;</span>Validation<span class="pl-k">&gt;</span></td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L7" class="blob-num js-line-number" data-line-number="7"></td>
+        <td id="file-outputs-swift-LC7" class="blob-code blob-code-inner js-file-line">  </td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L8" class="blob-num js-line-number" data-line-number="8"></td>
+        <td id="file-outputs-swift-LC8" class="blob-code blob-code-inner js-file-line">    <span class="pl-c"><span class="pl-c">//</span>MARK: - Inputs</span></td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L9" class="blob-num js-line-number" data-line-number="9"></td>
+        <td id="file-outputs-swift-LC9" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span>  </td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L10" class="blob-num js-line-number" data-line-number="10"></td>
+        <td id="file-outputs-swift-LC10" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">init</span>(</td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L11" class="blob-num js-line-number" data-line-number="11"></td>
+        <td id="file-outputs-swift-LC11" class="blob-code blob-code-inner js-file-line">          <span class="pl-smi"><span class="pl-en">email</span></span>: Driver&lt;<span class="pl-c1">String</span>&gt;,</td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L12" class="blob-num js-line-number" data-line-number="12"></td>
+        <td id="file-outputs-swift-LC12" class="blob-code blob-code-inner js-file-line">          <span class="pl-smi"><span class="pl-en">password</span></span>: Driver&lt;<span class="pl-c1">String</span>&gt;,</td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L13" class="blob-num js-line-number" data-line-number="13"></td>
+        <td id="file-outputs-swift-LC13" class="blob-code blob-code-inner js-file-line">          <span class="pl-smi"><span class="pl-en">signIn</span></span>: Driver&lt;<span class="pl-c1">Void</span>&gt;</td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L14" class="blob-num js-line-number" data-line-number="14"></td>
+        <td id="file-outputs-swift-LC14" class="blob-code blob-code-inner js-file-line">      ) {</td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L15" class="blob-num js-line-number" data-line-number="15"></td>
+        <td id="file-outputs-swift-LC15" class="blob-code blob-code-inner js-file-line">          <span class="pl-k">let</span> validation <span class="pl-k">=</span> ValidationService.<span class="pl-smi">shared</span></td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L16" class="blob-num js-line-number" data-line-number="16"></td>
+        <td id="file-outputs-swift-LC16" class="blob-code blob-code-inner js-file-line">      </td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L17" class="blob-num js-line-number" data-line-number="17"></td>
+        <td id="file-outputs-swift-LC17" class="blob-code blob-code-inner js-file-line">          validatedEmail <span class="pl-k">=</span> Driver.<span class="pl-c1">combineLatest</span>(email, signIn).<span class="pl-smi">flatMapLatest</span> {</td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L18" class="blob-num js-line-number" data-line-number="18"></td>
+        <td id="file-outputs-swift-LC18" class="blob-code blob-code-inner js-file-line">              validation.<span class="pl-c1">validate</span>(<span class="pl-c1">email</span>: <span class="pl-c1">$0</span>.0)</td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L19" class="blob-num js-line-number" data-line-number="19"></td>
+        <td id="file-outputs-swift-LC19" class="blob-code blob-code-inner js-file-line">                  .<span class="pl-c1">asDriver</span>(<span class="pl-c1">onErrorJustReturn</span>: .<span class="pl-c1">failed</span>(<span class="pl-s"><span class="pl-pds">"</span>Email required.<span class="pl-pds">"</span></span>))</td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L20" class="blob-num js-line-number" data-line-number="20"></td>
+        <td id="file-outputs-swift-LC20" class="blob-code blob-code-inner js-file-line">          }</td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L21" class="blob-num js-line-number" data-line-number="21"></td>
+        <td id="file-outputs-swift-LC21" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L22" class="blob-num js-line-number" data-line-number="22"></td>
+        <td id="file-outputs-swift-LC22" class="blob-code blob-code-inner js-file-line">          validatedPassword <span class="pl-k">=</span> Driver.<span class="pl-c1">combineLatest</span>(password, signIn).<span class="pl-smi">flatMapLatest</span> {</td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L23" class="blob-num js-line-number" data-line-number="23"></td>
+        <td id="file-outputs-swift-LC23" class="blob-code blob-code-inner js-file-line">              validation.<span class="pl-c1">validate</span>(<span class="pl-c1">password</span>: <span class="pl-c1">$0</span>.0)</td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L24" class="blob-num js-line-number" data-line-number="24"></td>
+        <td id="file-outputs-swift-LC24" class="blob-code blob-code-inner js-file-line">                  .<span class="pl-c1">asDriver</span>(<span class="pl-c1">onErrorJustReturn</span>: .<span class="pl-c1">failed</span>(<span class="pl-s"><span class="pl-pds">"</span>Password required.<span class="pl-pds">"</span></span>))</td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L25" class="blob-num js-line-number" data-line-number="25"></td>
+        <td id="file-outputs-swift-LC25" class="blob-code blob-code-inner js-file-line">          }</td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L26" class="blob-num js-line-number" data-line-number="26"></td>
+        <td id="file-outputs-swift-LC26" class="blob-code blob-code-inner js-file-line">      }</td>
+      </tr>
+      <tr>
+        <td id="file-outputs-swift-L27" class="blob-num js-line-number" data-line-number="27"></td>
+        <td id="file-outputs-swift-LC27" class="blob-code blob-code-inner js-file-line">}</td>
+      </tr>
+</tbody></table>
+
+
+  </div>
+
+  </div>
+</div>
+
+      </div>
+      <div class="gist-meta">
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8/raw/0008fc09447d817ecdc92a3622a518718afd515c/outputs.swift" style="float:right">view raw</a>
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8#file-outputs-swift">outputs.swift</a>
+        hosted with ❤ by <a href="https://github.com">GitHub</a>
+      </div>
+    </div>
+</div>
+</div><p>Above we are using <span class="inlineCode__2dlzF">Driver.combineLatest</span> to combine events from the UITextField Drivers and the sign in button tap. The purpose of this is to exploit a behavior of combine latest that the result observable will not emit an event until both source observables have at least one in order to prevent displaying validation errors before user interaction. Then we <span class="inlineCode__2dlzF">.flatMapLatest</span> the combined text and tap events passing the string into our validation service's appropriate validation method and return a <span class="inlineCode__2dlzF">Driver&lt;Validation&gt;</span> that is stored in the output properties defined above.</p><p>Close the loop by calling <span class="inlineCode__2dlzF">drive(onNext:)</span> on the output observables in the ViewController. Don't forget to put the results of the <span class="inlineCode__2dlzF">drive(onNext:)</span> calls in the <span class="inlineCode__2dlzF">bag</span> or to call <span class="inlineCode__2dlzF">bind()</span> in <span class="inlineCode__2dlzF">viewDidLoad()</span>.</p><div class="gist__11fu1"><div id="gist105469781" class="gist">
+    <div class="gist-file">
+      <div class="gist-data">
+        <div class="js-gist-file-update-container js-task-list-container file-box">
+  <div id="file-bind-swift" class="file my-2">
+    
+
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-swift  ">
+      
+<table class="highlight tab-size js-file-line-container" data-tab-size="8" data-paste-markdown-skip="">
+      <tbody><tr>
+        <td id="file-bind-swift-L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="file-bind-swift-LC1" class="blob-code blob-code-inner js-file-line"><span class="pl-k">class</span> <span class="pl-en">ViewController</span>: <span class="pl-e">UIViewController </span>{ <span class="pl-k">...</span></td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="file-bind-swift-LC2" class="blob-code blob-code-inner js-file-line">                             </td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L3" class="blob-num js-line-number" data-line-number="3"></td>
+        <td id="file-bind-swift-LC3" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">let</span> bag <span class="pl-k">=</span> <span class="pl-c1">DisposeBag</span>()</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L4" class="blob-num js-line-number" data-line-number="4"></td>
+        <td id="file-bind-swift-LC4" class="blob-code blob-code-inner js-file-line">                                        </td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L5" class="blob-num js-line-number" data-line-number="5"></td>
+        <td id="file-bind-swift-LC5" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">func</span> <span class="pl-en">bind</span>() {</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L6" class="blob-num js-line-number" data-line-number="6"></td>
+        <td id="file-bind-swift-LC6" class="blob-code blob-code-inner js-file-line">        viewModel.<span class="pl-smi">validatedEmail</span>.<span class="pl-c1">drive</span>(<span class="pl-c1">onNext</span>: { [<span class="pl-k">weak</span> <span class="pl-c1">self</span>] result <span class="pl-k">in</span></td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L7" class="blob-num js-line-number" data-line-number="7"></td>
+        <td id="file-bind-swift-LC7" class="blob-code blob-code-inner js-file-line">           <span class="pl-k">if</span> <span class="pl-k">case</span> .<span class="pl-c1">failed</span>(<span class="pl-k">let</span> message) <span class="pl-k">=</span> result {</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L8" class="blob-num js-line-number" data-line-number="8"></td>
+        <td id="file-bind-swift-LC8" class="blob-code blob-code-inner js-file-line">                <span class="pl-c1">self</span><span class="pl-k">?</span>.<span class="pl-smi">emailError</span>.<span class="pl-c1">text</span> <span class="pl-k">=</span> message</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L9" class="blob-num js-line-number" data-line-number="9"></td>
+        <td id="file-bind-swift-LC9" class="blob-code blob-code-inner js-file-line">                <span class="pl-c1">self</span><span class="pl-k">?</span>.<span class="pl-smi">emailError</span>.<span class="pl-smi">isHidden</span> <span class="pl-k">=</span> <span class="pl-c1">false</span></td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L10" class="blob-num js-line-number" data-line-number="10"></td>
+        <td id="file-bind-swift-LC10" class="blob-code blob-code-inner js-file-line">            } <span class="pl-k">else</span> {</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L11" class="blob-num js-line-number" data-line-number="11"></td>
+        <td id="file-bind-swift-LC11" class="blob-code blob-code-inner js-file-line">                <span class="pl-c1">self</span><span class="pl-k">?</span>.<span class="pl-smi">emailError</span>.<span class="pl-smi">isHidden</span> <span class="pl-k">=</span> <span class="pl-c1">true</span></td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L12" class="blob-num js-line-number" data-line-number="12"></td>
+        <td id="file-bind-swift-LC12" class="blob-code blob-code-inner js-file-line">            }</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L13" class="blob-num js-line-number" data-line-number="13"></td>
+        <td id="file-bind-swift-LC13" class="blob-code blob-code-inner js-file-line">            UIView.<span class="pl-c1">animate</span>(<span class="pl-c1">withDuration</span>: <span class="pl-c1">0.2</span>) {</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L14" class="blob-num js-line-number" data-line-number="14"></td>
+        <td id="file-bind-swift-LC14" class="blob-code blob-code-inner js-file-line">                <span class="pl-c1">self</span><span class="pl-k">?</span>.<span class="pl-c1">view</span>.<span class="pl-c1">layoutIfNeeded</span>()</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L15" class="blob-num js-line-number" data-line-number="15"></td>
+        <td id="file-bind-swift-LC15" class="blob-code blob-code-inner js-file-line">            }</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L16" class="blob-num js-line-number" data-line-number="16"></td>
+        <td id="file-bind-swift-LC16" class="blob-code blob-code-inner js-file-line">        }).<span class="pl-c1">disposed</span>(<span class="pl-c1">by</span>: bag)</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L17" class="blob-num js-line-number" data-line-number="17"></td>
+        <td id="file-bind-swift-LC17" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L18" class="blob-num js-line-number" data-line-number="18"></td>
+        <td id="file-bind-swift-LC18" class="blob-code blob-code-inner js-file-line">        viewModel.<span class="pl-smi">validatedPassword</span>.<span class="pl-c1">drive</span>(<span class="pl-c1">onNext</span>: { [<span class="pl-k">weak</span> <span class="pl-c1">self</span>] result <span class="pl-k">in</span></td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L19" class="blob-num js-line-number" data-line-number="19"></td>
+        <td id="file-bind-swift-LC19" class="blob-code blob-code-inner js-file-line">            <span class="pl-k">if</span> <span class="pl-k">case</span> .<span class="pl-c1">failed</span>(<span class="pl-k">let</span> message) <span class="pl-k">=</span> result {</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L20" class="blob-num js-line-number" data-line-number="20"></td>
+        <td id="file-bind-swift-LC20" class="blob-code blob-code-inner js-file-line">                <span class="pl-c1">self</span><span class="pl-k">?</span>.<span class="pl-smi">emailError</span>.<span class="pl-c1">text</span> <span class="pl-k">=</span> message</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L21" class="blob-num js-line-number" data-line-number="21"></td>
+        <td id="file-bind-swift-LC21" class="blob-code blob-code-inner js-file-line">                <span class="pl-c1">self</span><span class="pl-k">?</span>.<span class="pl-smi">emailError</span>.<span class="pl-smi">isHidden</span> <span class="pl-k">=</span> <span class="pl-c1">false</span></td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L22" class="blob-num js-line-number" data-line-number="22"></td>
+        <td id="file-bind-swift-LC22" class="blob-code blob-code-inner js-file-line">            } <span class="pl-k">else</span> {</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L23" class="blob-num js-line-number" data-line-number="23"></td>
+        <td id="file-bind-swift-LC23" class="blob-code blob-code-inner js-file-line">                <span class="pl-c1">self</span><span class="pl-k">?</span>.<span class="pl-smi">emailError</span>.<span class="pl-smi">isHidden</span> <span class="pl-k">=</span> <span class="pl-c1">true</span></td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L24" class="blob-num js-line-number" data-line-number="24"></td>
+        <td id="file-bind-swift-LC24" class="blob-code blob-code-inner js-file-line">            }</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L25" class="blob-num js-line-number" data-line-number="25"></td>
+        <td id="file-bind-swift-LC25" class="blob-code blob-code-inner js-file-line">            UIView.<span class="pl-c1">animate</span>(<span class="pl-c1">withDuration</span>: <span class="pl-c1">0.2</span>) {</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L26" class="blob-num js-line-number" data-line-number="26"></td>
+        <td id="file-bind-swift-LC26" class="blob-code blob-code-inner js-file-line">                <span class="pl-c1">self</span><span class="pl-k">?</span>.<span class="pl-c1">view</span>.<span class="pl-c1">layoutIfNeeded</span>()</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L27" class="blob-num js-line-number" data-line-number="27"></td>
+        <td id="file-bind-swift-LC27" class="blob-code blob-code-inner js-file-line">            }</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L28" class="blob-num js-line-number" data-line-number="28"></td>
+        <td id="file-bind-swift-LC28" class="blob-code blob-code-inner js-file-line">        }).<span class="pl-c1">disposed</span>(<span class="pl-c1">by</span>: bag)</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L29" class="blob-num js-line-number" data-line-number="29"></td>
+        <td id="file-bind-swift-LC29" class="blob-code blob-code-inner js-file-line">    }</td>
+      </tr>
+      <tr>
+        <td id="file-bind-swift-L30" class="blob-num js-line-number" data-line-number="30"></td>
+        <td id="file-bind-swift-LC30" class="blob-code blob-code-inner js-file-line">}</td>
+      </tr>
+</tbody></table>
+
+
+  </div>
+
+  </div>
+</div>
+
+      </div>
+      <div class="gist-meta">
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8/raw/0008fc09447d817ecdc92a3622a518718afd515c/bind.swift" style="float:right">view raw</a>
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8#file-bind-swift">bind.swift</a>
+        hosted with ❤ by <a href="https://github.com">GitHub</a>
+      </div>
+    </div>
+</div>
+</div><h2>The Getaway</h2><p>Add two more output properties to the ViewModel. The first is <span class="inlineCode__2dlzF">signingIn: Driver&lt;Bool&gt;</span> to manage the state of the current request so we can disable the sign in button when a request is in-flight. The second is the output Driver for the response from the network request to sign in.</p><div class="gist__11fu1"><div id="gist105469781" class="gist">
+    <div class="gist-file">
+      <div class="gist-data">
+        <div class="js-gist-file-update-container js-task-list-container file-box">
+  <div id="file-outputs1-swift" class="file my-2">
+    
+
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-swift  ">
+      
+<table class="highlight tab-size js-file-line-container" data-tab-size="8" data-paste-markdown-skip="">
+      <tbody><tr>
+        <td id="file-outputs1-swift-L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="file-outputs1-swift-LC1" class="blob-code blob-code-inner js-file-line"><span class="pl-k">let</span> signingIn<span class="pl-k">:</span> Driver<span class="pl-k">&lt;</span><span class="pl-c1">Bool</span><span class="pl-k">&gt;</span></td>
+      </tr>
+      <tr>
+        <td id="file-outputs1-swift-L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="file-outputs1-swift-LC2" class="blob-code blob-code-inner js-file-line"><span class="pl-k">let</span> signedIn<span class="pl-k">:</span> Driver<span class="pl-k">&lt;</span>LoginResponse<span class="pl-k">&gt;</span></td>
+      </tr>
+</tbody></table>
+
+
+  </div>
+
+  </div>
+</div>
+
+      </div>
+      <div class="gist-meta">
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8/raw/0008fc09447d817ecdc92a3622a518718afd515c/outputs1.swift" style="float:right">view raw</a>
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8#file-outputs1-swift">outputs1.swift</a>
+        hosted with ❤ by <a href="https://github.com">GitHub</a>
+      </div>
+    </div>
+</div>
+</div><p>The ViewModel snippet below is preparation to handle the sign in implementation. Compose the email and password text drivers (the inputs) with the validation result drivers (the outputs) in addition we create another Driver wrapped observable from a utility class borrowed from RxExample that provides the ability to track the activity of an observable so we can prevent the user from creating a duplicate request if one is already in-flight and the user mashes the sign in button.</p><div class="gist__11fu1"><div id="gist105469781" class="gist">
+    <div class="gist-file">
+      <div class="gist-data">
+        <div class="js-gist-file-update-container js-task-list-container file-box">
+  <div id="file-combine-swift" class="file my-2">
+    
+
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-swift  ">
+      
+<table class="highlight tab-size js-file-line-container" data-tab-size="8" data-paste-markdown-skip="">
+      <tbody><tr>
+        <td id="file-combine-swift-L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="file-combine-swift-LC1" class="blob-code blob-code-inner js-file-line"><span class="pl-k">let</span> emailPassword <span class="pl-k">=</span> Driver.<span class="pl-c1">combineLatest</span>(email, password)</td>
+      </tr>
+      <tr>
+        <td id="file-combine-swift-L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="file-combine-swift-LC2" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-combine-swift-L3" class="blob-num js-line-number" data-line-number="3"></td>
+        <td id="file-combine-swift-LC3" class="blob-code blob-code-inner js-file-line"><span class="pl-k">let</span> activity <span class="pl-k">=</span> <span class="pl-c1">ActivityIndicator</span>()</td>
+      </tr>
+      <tr>
+        <td id="file-combine-swift-L4" class="blob-num js-line-number" data-line-number="4"></td>
+        <td id="file-combine-swift-LC4" class="blob-code blob-code-inner js-file-line">signingIn <span class="pl-k">=</span> activity.<span class="pl-c1">asDriver</span>()</td>
+      </tr>
+      <tr>
+        <td id="file-combine-swift-L5" class="blob-num js-line-number" data-line-number="5"></td>
+        <td id="file-combine-swift-LC5" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-combine-swift-L6" class="blob-num js-line-number" data-line-number="6"></td>
+        <td id="file-combine-swift-LC6" class="blob-code blob-code-inner js-file-line"><span class="pl-k">let</span> validated <span class="pl-k">=</span> Driver.<span class="pl-c1">combineLatest</span>(</td>
+      </tr>
+      <tr>
+        <td id="file-combine-swift-L7" class="blob-num js-line-number" data-line-number="7"></td>
+        <td id="file-combine-swift-LC7" class="blob-code blob-code-inner js-file-line">    emailPassword,</td>
+      </tr>
+      <tr>
+        <td id="file-combine-swift-L8" class="blob-num js-line-number" data-line-number="8"></td>
+        <td id="file-combine-swift-LC8" class="blob-code blob-code-inner js-file-line">    validatedEmail,</td>
+      </tr>
+      <tr>
+        <td id="file-combine-swift-L9" class="blob-num js-line-number" data-line-number="9"></td>
+        <td id="file-combine-swift-LC9" class="blob-code blob-code-inner js-file-line">    validatedPassword,</td>
+      </tr>
+      <tr>
+        <td id="file-combine-swift-L10" class="blob-num js-line-number" data-line-number="10"></td>
+        <td id="file-combine-swift-LC10" class="blob-code blob-code-inner js-file-line">    signingIn</td>
+      </tr>
+      <tr>
+        <td id="file-combine-swift-L11" class="blob-num js-line-number" data-line-number="11"></td>
+        <td id="file-combine-swift-LC11" class="blob-code blob-code-inner js-file-line">)</td>
+      </tr>
+</tbody></table>
+
+
+  </div>
+
+  </div>
+</div>
+
+      </div>
+      <div class="gist-meta">
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8/raw/0008fc09447d817ecdc92a3622a518718afd515c/combine.swift" style="float:right">view raw</a>
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8#file-combine-swift">combine.swift</a>
+        hosted with ❤ by <a href="https://github.com">GitHub</a>
+      </div>
+    </div>
+</div>
+</div><p>Finally we hook everything together, there is a lot going on here so let's break it down line by line. First call <span class="inlineCode__2dlzF">withLatestFrom()</span> with the combined inputs and outputs composed above (<span class="inlineCode__2dlzF">validated</span>). Then we <span class="inlineCode__2dlzF">flatMapLatest</span> the observables composition, guard for successful validation and no requests in flight, then flatMap the observable from the network sign in request, check the response status (the example code is oversimplifed but in a real world application here is where you determine error messsages to display if for instance the response was <i>401 unauthorized</i>) and return an <span class="inlineCode__2dlzF">Observable&lt;LoginResponse&gt;</span>, add the activity tracking and finally build the <span class="inlineCode__2dlzF">signedIn: Driver&lt;LoginResponse&gt;</span> output Driver.</p><div class="gist__11fu1"><div id="gist105469781" class="gist">
+    <div class="gist-file">
+      <div class="gist-data">
+        <div class="js-gist-file-update-container js-task-list-container file-box">
+  <div id="file-signedin-swift" class="file my-2">
+    
+
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-swift  ">
+      
+<table class="highlight tab-size js-file-line-container" data-tab-size="8" data-paste-markdown-skip="">
+      <tbody><tr>
+        <td id="file-signedin-swift-L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="file-signedin-swift-LC1" class="blob-code blob-code-inner js-file-line">signedIn <span class="pl-k">=</span> signIn.<span class="pl-c1">withLatestFrom</span>(validated).<span class="pl-smi">flatMapLatest</span> { combined <span class="pl-k">in</span></td>
+      </tr>
+      <tr>
+        <td id="file-signedin-swift-L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="file-signedin-swift-LC2" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">let</span> (emailPassword, validatedUsername, validatedPassword, signingIn) <span class="pl-k">=</span> combined</td>
+      </tr>
+      <tr>
+        <td id="file-signedin-swift-L3" class="blob-num js-line-number" data-line-number="3"></td>
+        <td id="file-signedin-swift-LC3" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">guard</span> <span class="pl-k">case</span> (.<span class="pl-smi">success</span>, .<span class="pl-smi">success</span>, <span class="pl-c1">false</span>) <span class="pl-k">=</span> (validatedUsername, validatedPassword, signingIn) <span class="pl-k">else</span> {</td>
+      </tr>
+      <tr>
+        <td id="file-signedin-swift-L4" class="blob-num js-line-number" data-line-number="4"></td>
+        <td id="file-signedin-swift-LC4" class="blob-code blob-code-inner js-file-line">        <span class="pl-k">return</span> .<span class="pl-c1">just</span>(.<span class="pl-smi">validating</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-signedin-swift-L5" class="blob-num js-line-number" data-line-number="5"></td>
+        <td id="file-signedin-swift-LC5" class="blob-code blob-code-inner js-file-line">    }</td>
+      </tr>
+      <tr>
+        <td id="file-signedin-swift-L6" class="blob-num js-line-number" data-line-number="6"></td>
+        <td id="file-signedin-swift-LC6" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">return</span> Network.<span class="pl-smi">shared</span>.<span class="pl-c1">login</span>(<span class="pl-c1">email</span>: emailPassword.0,</td>
+      </tr>
+      <tr>
+        <td id="file-signedin-swift-L7" class="blob-num js-line-number" data-line-number="7"></td>
+        <td id="file-signedin-swift-LC7" class="blob-code blob-code-inner js-file-line">                                <span class="pl-c1">password</span>: emailPassword.1)</td>
+      </tr>
+      <tr>
+        <td id="file-signedin-swift-L8" class="blob-num js-line-number" data-line-number="8"></td>
+        <td id="file-signedin-swift-LC8" class="blob-code blob-code-inner js-file-line">        .<span class="pl-c1">flatMap</span> { response <span class="pl-k">-&gt;</span> Observable<span class="pl-k">&lt;</span>LoginResponse<span class="pl-k">&gt;</span> <span class="pl-k">in</span></td>
+      </tr>
+      <tr>
+        <td id="file-signedin-swift-L9" class="blob-num js-line-number" data-line-number="9"></td>
+        <td id="file-signedin-swift-LC9" class="blob-code blob-code-inner js-file-line">            <span class="pl-k">if</span> <span class="pl-k">case</span> .<span class="pl-smi">success</span> <span class="pl-k">=</span> response {</td>
+      </tr>
+      <tr>
+        <td id="file-signedin-swift-L10" class="blob-num js-line-number" data-line-number="10"></td>
+        <td id="file-signedin-swift-LC10" class="blob-code blob-code-inner js-file-line">                <span class="pl-k">return</span> .<span class="pl-c1">just</span>(.<span class="pl-smi">success</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-signedin-swift-L11" class="blob-num js-line-number" data-line-number="11"></td>
+        <td id="file-signedin-swift-LC11" class="blob-code blob-code-inner js-file-line">            }</td>
+      </tr>
+      <tr>
+        <td id="file-signedin-swift-L12" class="blob-num js-line-number" data-line-number="12"></td>
+        <td id="file-signedin-swift-LC12" class="blob-code blob-code-inner js-file-line">            <span class="pl-k">return</span> .<span class="pl-c1">just</span>(response)</td>
+      </tr>
+      <tr>
+        <td id="file-signedin-swift-L13" class="blob-num js-line-number" data-line-number="13"></td>
+        <td id="file-signedin-swift-LC13" class="blob-code blob-code-inner js-file-line">    }</td>
+      </tr>
+      <tr>
+        <td id="file-signedin-swift-L14" class="blob-num js-line-number" data-line-number="14"></td>
+        <td id="file-signedin-swift-LC14" class="blob-code blob-code-inner js-file-line">    .<span class="pl-c1">trackActivity</span>(activity)</td>
+      </tr>
+      <tr>
+        <td id="file-signedin-swift-L15" class="blob-num js-line-number" data-line-number="15"></td>
+        <td id="file-signedin-swift-LC15" class="blob-code blob-code-inner js-file-line">    .<span class="pl-c1">asDriver</span>(<span class="pl-c1">onErrorJustReturn</span>: .<span class="pl-smi">failure</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-signedin-swift-L16" class="blob-num js-line-number" data-line-number="16"></td>
+        <td id="file-signedin-swift-LC16" class="blob-code blob-code-inner js-file-line">}</td>
+      </tr>
+</tbody></table>
+
+
+  </div>
+
+  </div>
+</div>
+
+      </div>
+      <div class="gist-meta">
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8/raw/0008fc09447d817ecdc92a3622a518718afd515c/signedin.swift" style="float:right">view raw</a>
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8#file-signedin-swift">signedin.swift</a>
+        hosted with ❤ by <a href="https://github.com">GitHub</a>
+      </div>
+    </div>
+</div>
+</div><p>Now in the ViewController we use <span class="inlineCode__2dlzF">drive(onNext:)</span> to drive the state of the <span class="inlineCode__2dlzF">isEnabled</span> property of the sign in button and drive <span class="inlineCode__2dlzF">signedIn</span> to handle the result of the sign in network call. Again taking caution to use <span class="inlineCode__2dlzF">[weak self]</span> and don't forget to dispose of the result of <span class="inlineCode__2dlzF">drive</span> in the bag.</p><div class="gist__11fu1"><div id="gist105469781" class="gist">
+    <div class="gist-file">
+      <div class="gist-data">
+        <div class="js-gist-file-update-container js-task-list-container file-box">
+  <div id="file-bind1-swift" class="file my-2">
+    
+
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-swift  ">
+      
+<table class="highlight tab-size js-file-line-container" data-tab-size="8" data-paste-markdown-skip="">
+      <tbody><tr>
+        <td id="file-bind1-swift-L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="file-bind1-swift-LC1" class="blob-code blob-code-inner js-file-line">viewModel.<span class="pl-smi">signingIn</span>.<span class="pl-c1">drive</span>(<span class="pl-c1">onNext</span>: { [<span class="pl-k">weak</span> <span class="pl-c1">self</span>] signingIn <span class="pl-k">in</span></td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="file-bind1-swift-LC2" class="blob-code blob-code-inner js-file-line">    <span class="pl-c1">self</span><span class="pl-k">?</span>.<span class="pl-smi">signIn</span>.<span class="pl-smi">isEnabled</span> <span class="pl-k">=</span> <span class="pl-k">!</span>signingIn</td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L3" class="blob-num js-line-number" data-line-number="3"></td>
+        <td id="file-bind1-swift-LC3" class="blob-code blob-code-inner js-file-line">}).<span class="pl-c1">disposed</span>(<span class="pl-c1">by</span>: bag)</td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L4" class="blob-num js-line-number" data-line-number="4"></td>
+        <td id="file-bind1-swift-LC4" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L5" class="blob-num js-line-number" data-line-number="5"></td>
+        <td id="file-bind1-swift-LC5" class="blob-code blob-code-inner js-file-line">viewModel.<span class="pl-smi">signedIn</span>.<span class="pl-c1">drive</span>(<span class="pl-c1">onNext</span>: { [<span class="pl-k">weak</span> <span class="pl-c1">self</span>] signedIn <span class="pl-k">in</span></td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L6" class="blob-num js-line-number" data-line-number="6"></td>
+        <td id="file-bind1-swift-LC6" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">if</span> <span class="pl-k">case</span> .<span class="pl-smi">success</span> <span class="pl-k">=</span> signedIn {</td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L7" class="blob-num js-line-number" data-line-number="7"></td>
+        <td id="file-bind1-swift-LC7" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">self</span><span class="pl-k">?</span>.<span class="pl-smi">emailError</span>.<span class="pl-smi">isHidden</span> <span class="pl-k">=</span> <span class="pl-c1">true</span></td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L8" class="blob-num js-line-number" data-line-number="8"></td>
+        <td id="file-bind1-swift-LC8" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">self</span><span class="pl-k">?</span>.<span class="pl-smi">passwordError</span>.<span class="pl-smi">isHidden</span> <span class="pl-k">=</span> <span class="pl-c1">true</span></td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L9" class="blob-num js-line-number" data-line-number="9"></td>
+        <td id="file-bind1-swift-LC9" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">self</span><span class="pl-k">?</span>.<span class="pl-c1">view</span>.<span class="pl-c1">endEditing</span>(<span class="pl-c1">true</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L10" class="blob-num js-line-number" data-line-number="10"></td>
+        <td id="file-bind1-swift-LC10" class="blob-code blob-code-inner js-file-line">    }</td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L11" class="blob-num js-line-number" data-line-number="11"></td>
+        <td id="file-bind1-swift-LC11" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">if</span> <span class="pl-k">case</span> .<span class="pl-smi">failure</span> <span class="pl-k">=</span> signedIn {</td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L12" class="blob-num js-line-number" data-line-number="12"></td>
+        <td id="file-bind1-swift-LC12" class="blob-code blob-code-inner js-file-line">        <span class="pl-k">let</span> message <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>Failed, please try again.<span class="pl-pds">"</span></span></td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L13" class="blob-num js-line-number" data-line-number="13"></td>
+        <td id="file-bind1-swift-LC13" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">self</span><span class="pl-k">?</span>.<span class="pl-smi">passwordError</span>.<span class="pl-c1">text</span> <span class="pl-k">=</span> message</td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L14" class="blob-num js-line-number" data-line-number="14"></td>
+        <td id="file-bind1-swift-LC14" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">self</span><span class="pl-k">?</span>.<span class="pl-smi">passwordError</span>.<span class="pl-smi">isHidden</span> <span class="pl-k">=</span> <span class="pl-c1">false</span></td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L15" class="blob-num js-line-number" data-line-number="15"></td>
+        <td id="file-bind1-swift-LC15" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">self</span><span class="pl-k">?</span>.<span class="pl-smi">emailError</span>.<span class="pl-smi">isHidden</span> <span class="pl-k">=</span> <span class="pl-c1">true</span></td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L16" class="blob-num js-line-number" data-line-number="16"></td>
+        <td id="file-bind1-swift-LC16" class="blob-code blob-code-inner js-file-line">    }</td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L17" class="blob-num js-line-number" data-line-number="17"></td>
+        <td id="file-bind1-swift-LC17" class="blob-code blob-code-inner js-file-line">    UIView.<span class="pl-c1">animate</span>(<span class="pl-c1">withDuration</span>: <span class="pl-c1">0.2</span>) {</td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L18" class="blob-num js-line-number" data-line-number="18"></td>
+        <td id="file-bind1-swift-LC18" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">self</span><span class="pl-k">?</span>.<span class="pl-c1">view</span>.<span class="pl-c1">layoutIfNeeded</span>()</td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L19" class="blob-num js-line-number" data-line-number="19"></td>
+        <td id="file-bind1-swift-LC19" class="blob-code blob-code-inner js-file-line">    }</td>
+      </tr>
+      <tr>
+        <td id="file-bind1-swift-L20" class="blob-num js-line-number" data-line-number="20"></td>
+        <td id="file-bind1-swift-LC20" class="blob-code blob-code-inner js-file-line">}).<span class="pl-c1">disposed</span>(<span class="pl-c1">by</span>: bag)</td>
+      </tr>
+</tbody></table>
+
+
+  </div>
+
+  </div>
+</div>
+
+      </div>
+      <div class="gist-meta">
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8/raw/0008fc09447d817ecdc92a3622a518718afd515c/bind1.swift" style="float:right">view raw</a>
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8#file-bind1-swift">bind1.swift</a>
+        hosted with ❤ by <a href="https://github.com">GitHub</a>
+      </div>
+    </div>
+</div>
+</div><p>The success state is where the application would presumbaly handle navigating elsewhere or dismissing the sign in in screen if presented modally. In a real world application the response should wrap a more informative error message that can then be displayed to the user  .</p><h2>Test Drive</h2><p>What about unit testing the ViewModel you ask? Simple, since all the ViewModel knows is that it needs 3 Drivers we can provide those easily.</p><div class="gist__11fu1"><div id="gist105469781" class="gist">
+    <div class="gist-file">
+      <div class="gist-data">
+        <div class="js-gist-file-update-container js-task-list-container file-box">
+  <div id="file-testdrive-swift" class="file my-2">
+    
+
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-swift  ">
+      
+<table class="highlight tab-size js-file-line-container" data-tab-size="8" data-paste-markdown-skip="">
+      <tbody><tr>
+        <td id="file-testdrive-swift-L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="file-testdrive-swift-LC1" class="blob-code blob-code-inner js-file-line"><span class="pl-c"><span class="pl-c">//</span>  Copyright © 2020 Scott Orlyck. All rights reserved.</span></td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="file-testdrive-swift-LC2" class="blob-code blob-code-inner js-file-line"><span class="pl-c"></span></td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L3" class="blob-num js-line-number" data-line-number="3"></td>
+        <td id="file-testdrive-swift-LC3" class="blob-code blob-code-inner js-file-line"><span class="pl-k">import</span> <span class="pl-en">XCTest</span></td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L4" class="blob-num js-line-number" data-line-number="4"></td>
+        <td id="file-testdrive-swift-LC4" class="blob-code blob-code-inner js-file-line"><span class="pl-k">import</span> <span class="pl-en">RxSwift</span></td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L5" class="blob-num js-line-number" data-line-number="5"></td>
+        <td id="file-testdrive-swift-LC5" class="blob-code blob-code-inner js-file-line"><span class="pl-k">import</span> <span class="pl-en">RxCocoa</span></td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L6" class="blob-num js-line-number" data-line-number="6"></td>
+        <td id="file-testdrive-swift-LC6" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L7" class="blob-num js-line-number" data-line-number="7"></td>
+        <td id="file-testdrive-swift-LC7" class="blob-code blob-code-inner js-file-line"><span class="pl-k">@testable</span> <span class="pl-k">import</span> <span class="pl-en">Drive</span></td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L8" class="blob-num js-line-number" data-line-number="8"></td>
+        <td id="file-testdrive-swift-LC8" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L9" class="blob-num js-line-number" data-line-number="9"></td>
+        <td id="file-testdrive-swift-LC9" class="blob-code blob-code-inner js-file-line"><span class="pl-k">class</span> <span class="pl-en">TestDrive</span>: <span class="pl-e">XCTestCase </span>{</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L10" class="blob-num js-line-number" data-line-number="10"></td>
+        <td id="file-testdrive-swift-LC10" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L11" class="blob-num js-line-number" data-line-number="11"></td>
+        <td id="file-testdrive-swift-LC11" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">var</span> subject<span class="pl-k">:</span> ViewModel<span class="pl-k">?</span></td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L12" class="blob-num js-line-number" data-line-number="12"></td>
+        <td id="file-testdrive-swift-LC12" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">let</span> bag <span class="pl-k">=</span> <span class="pl-c1">DisposeBag</span>()</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L13" class="blob-num js-line-number" data-line-number="13"></td>
+        <td id="file-testdrive-swift-LC13" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">override</span> <span class="pl-k">func</span> <span class="pl-en">setUpWithError</span>() <span class="pl-k">throws</span> {</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L14" class="blob-num js-line-number" data-line-number="14"></td>
+        <td id="file-testdrive-swift-LC14" class="blob-code blob-code-inner js-file-line">        </td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L15" class="blob-num js-line-number" data-line-number="15"></td>
+        <td id="file-testdrive-swift-LC15" class="blob-code blob-code-inner js-file-line">        <span class="pl-k">let</span> email<span class="pl-k">:</span> Driver<span class="pl-k">&lt;</span><span class="pl-c1">String</span><span class="pl-k">&gt;</span> <span class="pl-k">=</span> Observable<span class="pl-k">&lt;</span><span class="pl-c1">String</span><span class="pl-k">&gt;</span>.<span class="pl-c1">just</span>(<span class="pl-s"><span class="pl-pds">"</span>email@email<span class="pl-pds">"</span></span>).<span class="pl-c1">asDriver</span>(<span class="pl-c1">onErrorJustReturn</span>: <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>)</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L16" class="blob-num js-line-number" data-line-number="16"></td>
+        <td id="file-testdrive-swift-LC16" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L17" class="blob-num js-line-number" data-line-number="17"></td>
+        <td id="file-testdrive-swift-LC17" class="blob-code blob-code-inner js-file-line">        <span class="pl-k">let</span> password<span class="pl-k">:</span> Observable<span class="pl-k">&lt;</span><span class="pl-c1">String</span><span class="pl-k">&gt;</span> <span class="pl-k">=</span> .<span class="pl-c1">just</span>(<span class="pl-s"><span class="pl-pds">"</span>email@email<span class="pl-pds">"</span></span>)</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L18" class="blob-num js-line-number" data-line-number="18"></td>
+        <td id="file-testdrive-swift-LC18" class="blob-code blob-code-inner js-file-line">        <span class="pl-k">let</span> signIn<span class="pl-k">:</span> Observable<span class="pl-k">&lt;</span><span class="pl-c1">Void</span><span class="pl-k">&gt;</span> <span class="pl-k">=</span> .<span class="pl-c1">just</span>(())</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L19" class="blob-num js-line-number" data-line-number="19"></td>
+        <td id="file-testdrive-swift-LC19" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L20" class="blob-num js-line-number" data-line-number="20"></td>
+        <td id="file-testdrive-swift-LC20" class="blob-code blob-code-inner js-file-line">        subject <span class="pl-k">=</span> <span class="pl-c1">ViewModel</span>(</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L21" class="blob-num js-line-number" data-line-number="21"></td>
+        <td id="file-testdrive-swift-LC21" class="blob-code blob-code-inner js-file-line">            <span class="pl-c1">email</span>: email.<span class="pl-c1">asDriver</span>(<span class="pl-c1">onErrorJustReturn</span>: <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>),</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L22" class="blob-num js-line-number" data-line-number="22"></td>
+        <td id="file-testdrive-swift-LC22" class="blob-code blob-code-inner js-file-line">            <span class="pl-c1">password</span>: password.<span class="pl-c1">asDriver</span>(<span class="pl-c1">onErrorJustReturn</span>: <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>),</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L23" class="blob-num js-line-number" data-line-number="23"></td>
+        <td id="file-testdrive-swift-LC23" class="blob-code blob-code-inner js-file-line">            <span class="pl-c1">signIn</span>: signIn.<span class="pl-c1">asDriver</span>(<span class="pl-c1">onErrorJustReturn</span>:())</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L24" class="blob-num js-line-number" data-line-number="24"></td>
+        <td id="file-testdrive-swift-LC24" class="blob-code blob-code-inner js-file-line">        )</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L25" class="blob-num js-line-number" data-line-number="25"></td>
+        <td id="file-testdrive-swift-LC25" class="blob-code blob-code-inner js-file-line">    }</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L26" class="blob-num js-line-number" data-line-number="26"></td>
+        <td id="file-testdrive-swift-LC26" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L27" class="blob-num js-line-number" data-line-number="27"></td>
+        <td id="file-testdrive-swift-LC27" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">func</span> <span class="pl-en">testDrive</span>() <span class="pl-k">throws</span> {</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L28" class="blob-num js-line-number" data-line-number="28"></td>
+        <td id="file-testdrive-swift-LC28" class="blob-code blob-code-inner js-file-line">        <span class="pl-c1">XCTAssertNotNil</span>(subject)</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L29" class="blob-num js-line-number" data-line-number="29"></td>
+        <td id="file-testdrive-swift-LC29" class="blob-code blob-code-inner js-file-line">        subject<span class="pl-k">?</span>.<span class="pl-smi">validatedEmail</span>.<span class="pl-c1">drive</span>(<span class="pl-c1">onNext</span>: { result <span class="pl-k">in</span></td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L30" class="blob-num js-line-number" data-line-number="30"></td>
+        <td id="file-testdrive-swift-LC30" class="blob-code blob-code-inner js-file-line">            <span class="pl-c1">XCTAssertEqual</span>(result, .<span class="pl-c1">failed</span>(<span class="pl-s"><span class="pl-pds">"</span>Please enter a valid email address.<span class="pl-pds">"</span></span>))</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L31" class="blob-num js-line-number" data-line-number="31"></td>
+        <td id="file-testdrive-swift-LC31" class="blob-code blob-code-inner js-file-line">        }).<span class="pl-c1">disposed</span>(<span class="pl-c1">by</span>: bag)</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L32" class="blob-num js-line-number" data-line-number="32"></td>
+        <td id="file-testdrive-swift-LC32" class="blob-code blob-code-inner js-file-line">    }</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L33" class="blob-num js-line-number" data-line-number="33"></td>
+        <td id="file-testdrive-swift-LC33" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-testdrive-swift-L34" class="blob-num js-line-number" data-line-number="34"></td>
+        <td id="file-testdrive-swift-LC34" class="blob-code blob-code-inner js-file-line">}</td>
+      </tr>
+</tbody></table>
+
+
+  </div>
+
+  </div>
+</div>
+
+      </div>
+      <div class="gist-meta">
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8/raw/0008fc09447d817ecdc92a3622a518718afd515c/TestDrive.swift" style="float:right">view raw</a>
+        <a href="https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8#file-testdrive-swift">TestDrive.swift</a>
+        hosted with ❤ by <a href="https://github.com">GitHub</a>
+      </div>
+    </div>
+</div>
+</div><h2>In the Bag</h2><p>That's the post, you can find the completed working project <a href="https://github.com/ScottORLY/drive">here</a>. Feel free to drop some feedback or questions on <a href="https://twitter.com/orlyck">Twitter</a> or you can go to the <a href="https://github.com/ScottORLY/drive-blog">source</a> of this blog post itself and create an issue or pull-request. Until next time.</p></div><link rel="stylesheet" href="https://github.githubassets.com/assets/gist-embed-fd43f22140a6ad2cc9d0aa1f169a01f3.css"></body></html>

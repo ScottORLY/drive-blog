@@ -1,11 +1,17 @@
 import styles from '../styles.css'
 
+let stylesheet = undefined
+
 const Gist = ({ attributes: { url }}) => {
+    
     const container = <div className={styles.gist}/>
 
     function callback(gistData) {
-        var styleSheet = <link rel="stylesheet" href={gistData.stylesheet} />
-        document.body.appendChild(styleSheet)
+        if (stylesheet == undefined) {
+            stylesheet = gistData.stylesheet
+            const link = <link rel="stylesheet" href={stylesheet} />
+            document.body.appendChild(link)
+        }
         container.innerHTML = gistData.div
     }
     

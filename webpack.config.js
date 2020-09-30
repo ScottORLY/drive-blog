@@ -1,7 +1,7 @@
 const webpack = require('webpack')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-
+const path = require('path');
 const isDEV = process.env.NODE_ENV == 'development'
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
         './src/index.js'
     ],
     output: {
-        path: __dirname + '/docs',
+        path: path.join(__dirname, 'docs'),
         publicPath: '/drive-blog',
         filename: 'bundle.js'
     },
@@ -21,12 +21,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: 'src/index.html',
-            chunksSortMode: "none",
-
-        }),
-        new MiniCssExtractPlugin({
-            filename: '[name].[hash].css',
-            chunkFilename: '[id].[hash].css'
+            chunksSortMode: "none"
         }),
         new webpack.ProvidePlugin({
             h: ['jsx-pragma', 'h'],
@@ -56,12 +51,7 @@ module.exports = {
                 test: /\.css$/,
                 exclude: /node_modules/,
                 use: [
-                    isDEV ? 'style-loader' :  {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            hmr: false
-                        }
-                    },
+                    'style-loader',
                     {
                         loader: 'css-loader',
                         options: {
@@ -87,7 +77,8 @@ module.exports = {
         ]
     },
     devServer: {
-        contentBase: './docs',
+        publicPath: '/drive-blog',
+        contentBase: path.join(__dirname, 'docs'),
         compress: true,
         historyApiFallback: true
     }

@@ -1,7 +1,7 @@
 import styles from './styles.css'
 import Gist from './gist'
 
-const InlineCode = ({ attributes: { code }}) => <pre className={styles.inlineCode}>{code}</pre>
+const InlineCode = ({ attributes: { code }}) => <span className={styles.inlineCode}>{code}</span>
 
 const template = 'https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8.json?file='
 
