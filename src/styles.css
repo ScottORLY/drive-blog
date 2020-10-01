@@ -10,23 +10,23 @@ html {
 }
 
 #app {
-    @apply px-8 mb-12 max-w-3xl flex flex-col mx-auto
+    @apply px-1 mb-12 max-w-3xl flex flex-col mx-auto
 }
 
 .img {
   @apply object-contain max-w-full float-right mx-auto rounded-lg
 }
 
-h {
-  @apply my-3
+h2 {
+  @apply my-8
 }
+
 h1  {
   font-family: 'Inter Black', sans-serif;
 }
 
 p {
-  text-indent: 1rem;
-  line-height: 1.5rem;
+  text-indent: 1.5rem;
   @apply my-3
 }
 
@@ -43,9 +43,38 @@ p {
 }
 
 .inlineCode {
-  @apply inline bg-gray-700 text-gray-100 p-1 rounded-md text-sm
+  @apply inline text-xs
+}
+
+.code {
+  @apply my-8 text-xs
 }
 
 .list {
   @apply list-none
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+@screen md {
+  #app {
+      @apply px-8
+  }
+  p {
+    @apply text-xl
+  }
+
+  .inlineCode {
+    @apply text-sm
+  }
+  
+  .code {
+    @apply text-sm
+  }
 }

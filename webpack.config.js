@@ -49,14 +49,14 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                exclude: /node_modules/,
+                // exclude: /node_modules/,
                 use: [
                     'style-loader',
                     {
                         loader: 'css-loader',
                         options: {
                             modules: {
-                                localIdentName: '[local]__[hash:base64:5]'
+                                localIdentName: '[local]'
                             },
                             importLoaders: 1
                         }

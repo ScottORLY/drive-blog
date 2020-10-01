@@ -5,6 +5,12 @@ module.exports =  {
         }
     },
     plugins: [
+        ["prismjs", {
+            "languages": ["swift"],
+            "theme": "okaidia",
+            "css": true
+          }
+        ],
         [
             "@babel/plugin-transform-react-jsx",
             {
@@ -21,7 +27,7 @@ module.exports =  {
               "corejs": false,
               "helpers": true,
               "regenerator": true,
-              "useESModules": false
+              "useESModules": true
             }
         ]
     ],

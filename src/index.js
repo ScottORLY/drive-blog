@@ -1,13 +1,32 @@
 import styles from './styles.css'
-import Gist from './gist'
 
-const InlineCode = ({ attributes: { code }}) => <span className={styles.inlineCode}>{code}</span>
+import Prism from 'prismjs'
+import Snippets from './snippets'
 
-const template = 'https://gist.github.com/ScottORLY/49dcd868fa0127b9db5a8ff40e14d9b8.json?file='
+const InlineCode = ({ attributes: { code }}) => (
+    <span className={styles.inlineCode}>
+        <code className='language-swift'>{code}</code>
+    </span>
+)
+
+
+const Code = ({ attributes: { snippet }}) => (
+    <div className={styles.code}>
+        <pre>
+            <code className='language-swift'>
+                { snippet }
+            </code>
+        </pre>
+    </div>
+)
 
 const blog = (
-<div id={styles.app}>
+    <div id={styles.app}>
     <h1><i>Drive</i></h1>
+
+    <div>
+        
+    </div>
 
     <h2>Functional Reactive Form Validation in iOS with RxSwift</h2>
     <h4>by <a href='https://github.com/ScottORLY'>Scott Orlyck</a></h4>
@@ -51,8 +70,8 @@ const blog = (
         An example from the RxSwift documentation is an effective 
         demonstration of the implementation complexity faced when using Rx with UIKit.
     </p>
-
-    <Gist url={`${template}subscribe.swift`} />
+    
+    <Code snippet={Snippets.example} />
 
     <p>
         Thankfully RxSwift provides us with some wrappers around common RxSwift UI patterns that can help simplify implementations. RxSwift calls these wrappers <a hre=''>traits</a> and today we are going to focus on the <a href="https://github.com/ReactiveX/RxSwift/blob/main/Documentation/Traits.md#driver">Driver</a> trait.
@@ -62,7 +81,7 @@ const blog = (
         RxSwift Traits are simple structs that implement the builder pattern to return an observable sequence guaranteed to have certain properties. The Driver trait guarantees three properties that happen to be integral to correct UI implementations: events are observed on the main thread, the observable sequence can't error out, and side effects are shared so that each subscription will share the same computational resources.
     </p>
 
-    <Gist url={`${template}RxDrive.swift`} />
+    <Code snippet={Snippets.rxDriver} />
 
     <p className={styles.noIndent}>Let's take a closer look at a practical example.</p>
 
@@ -94,19 +113,19 @@ const blog = (
         First we define inputs to the ViewModel. The initializer for our new ViewModel class below takes a pair of <InlineCode code='Driver<String>' /> for the email and password and a <InlineCode code='Driver<Void>' /> for the sign in button tap. We are not going to explicitly store references to these sequences.
     </p>
 
-    <Gist url={`${template}init.swift`} />
+    <Code snippet={Snippets.init} />
 
     <p>
         In the ViewController we initialize the ViewModel passing in the Observables from the IBOutlets. Note the call to <InlineCode code='.asDriver()'/> to build the Drivers from the ControlEvent observables.
     </p>
 
-    <Gist url={`${template}outlets.swift`} />
+    <Code snippet={Snippets.init0} />
 
     <p>
         Next we define output properties to store the reference to the result of the operator transformations we are going to perform on the input observables.
     </p>
 
-    <Gist url={`${template}outputs.swift`} />
+    <Code snippet={Snippets.validation} />
 
     <p>
         Above we are using <InlineCode code='Driver.combineLatest' /> to combine events from the UITextField Drivers and the sign in button tap. The purpose of this is to exploit a behavior of combine latest that the result observable will not emit an event until both source observables have at least one in order to prevent displaying validation errors before user interaction. Then we <InlineCode code='.flatMapLatest' /> the combined text and tap events passing the string into our validation service's appropriate validation method and return a <InlineCode code='Driver<Validation>' /> that is stored in the output properties defined above.
@@ -116,7 +135,7 @@ const blog = (
         Close the loop by calling <InlineCode code='drive(onNext:)' /> on the output observables in the ViewController. Don't forget to put the results of the <InlineCode code='drive(onNext:)' /> calls in the <InlineCode code='bag' /> or to call <InlineCode code='bind()'/> in <InlineCode code='viewDidLoad()'/>.
     </p>
 
-    <Gist url={`${template}bind.swift`} />
+    <Code snippet={Snippets.bindValidation} />
 
     <h2>The Getaway</h2>
 
@@ -124,25 +143,25 @@ const blog = (
         Add two more output properties to the ViewModel. The first is <InlineCode code='signingIn: Driver<Bool>' /> to manage the state of the current request so we can disable the sign in button when a request is in-flight. The second is the output Driver for the response from the network request to sign in.
     </p>
 
-    <Gist url={`${template}outputs1.swift`} />
+    <Code snippet={Snippets.outputs} />
 
     <p>
         The ViewModel snippet below is preparation to handle the sign in implementation. Compose the email and password text drivers (the inputs) with the validation result drivers (the outputs) in addition we create another Driver wrapped observable from a utility class borrowed from RxExample that provides the ability to track the activity of an observable so we can prevent the user from creating a duplicate request if one is already in-flight and the user mashes the sign in button.
     </p>
 
-    <Gist url={`${template}combine.swift`} />
+    <Code snippet={Snippets.compose} />
 
     <p>
-        Finally we hook everything together, there is a lot going on here so let's break it down line by line. First call <InlineCode code='withLatestFrom()' /> with the combined inputs and outputs composed above (<InlineCode code='validated' />). Then we <InlineCode code='flatMapLatest' /> the observables composition, guard for successful validation and no requests in flight, then flatMap the observable from the network sign in request, check the response status (the example code is oversimplifed but in a real world application here is where you determine error messsages to display if for instance the response was <i>401 unauthorized</i>) and return an <InlineCode code='Observable<LoginResponse>' />, add the activity tracking and finally build the <InlineCode code='signedIn: Driver<LoginResponse>' /> output Driver. 
+        Finally we hook everything together, there is a lot going on here so let's break it down line by line. First call <InlineCode code='withLatestFrom()' /> on the <InlineCode code='signIn: Driver<Void>' /> passing in the combined inputs and outputs composed above (<InlineCode code='validated' />). Then <InlineCode code='flatMapLatest' /> the sign in button tap event with the observables composition, guard for successful validation and no requests in flight, then <InlineCode code='flatMap' /> the observable from the network sign in request, check the response status (the example code is oversimplifed but in a real world application here is where you determine error messsages to display if for instance the response was <i>401 unauthorized</i>) and return an <InlineCode code='Observable<LoginResponse>' />, add the activity tracking and finally build the <InlineCode code='signedIn: Driver<LoginResponse>' /> output Driver. 
     </p>
 
-    <Gist url={`${template}signedin.swift`} />
+    <Code snippet={Snippets.signIn} />
 
     <p>
         Now in the ViewController we use <InlineCode code='drive(onNext:)' /> to drive the state of the <InlineCode code='isEnabled' /> property of the sign in button and drive <InlineCode code='signedIn'/> to handle the result of the sign in network call. Again taking caution to use <InlineCode code='[weak self]' /> and don't forget to dispose of the result of <InlineCode code='drive' /> in the bag. 
     </p>
 
-    <Gist url={`${template}bind1.swift`} />
+    <Code snippet={Snippets.bindSignIn} />
 
     <p>
         The success state is where the application would presumbaly handle navigating elsewhere or dismissing the sign in in screen if presented modally. In a real world application the response should wrap a more informative error message that can then be displayed to the user  .
@@ -154,11 +173,12 @@ const blog = (
         What about unit testing the ViewModel you ask? Simple, since all the ViewModel knows is that it needs 3 Drivers we can provide those easily. 
     </p>
 
-    <Gist url={`${template}TestDrive.swift`} />
+    <Code snippet={Snippets.testDrive} />
 
     <h2>In the Bag</h2>
     <p>That's the post, you can find the completed working project <a href='https://github.com/ScottORLY/drive'>here</a>. Feel free to drop some feedback or questions on <a href='https://twitter.com/orlyck'>Twitter</a> or you can go to the <a href='https://github.com/ScottORLY/drive-blog'>source</a> of this blog post itself and create an issue or pull-request. Until next time.</p>
 </div>
 )
-
 document.body.appendChild(blog)
+
+Prism.highlightAll()
