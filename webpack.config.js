@@ -69,10 +69,8 @@ module.exports = {
                 use: ['file-loader']
             },
             {
-                test: /\.(woff|woff2)$/,
-                use: {
-                  loader: 'url-loader',
-                }
+                test: /\.(woff|woff2|eot|ttf|otf)$/,
+                use: ['file-loader']
             }
         ]
     },

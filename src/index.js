@@ -24,10 +24,6 @@ const blog = (
     <div id={styles.app}>
     <h1><i>Drive</i></h1>
 
-    <div>
-        
-    </div>
-
     <h2>Functional Reactive Form Validation in iOS with RxSwift</h2>
     <h4>by <a href='https://github.com/ScottORLY'>Scott Orlyck</a></h4>
 
@@ -85,7 +81,7 @@ const blog = (
 
     <p className={styles.noIndent}>Let's take a closer look at a practical example.</p>
 
-    <h2>Real Time UITextfield Validation</h2>
+    <h2>Real Time UITextField Validation</h2>
 
     <div>
         <img className={`${styles.img} ${styles.right}`} src='https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/validation.gif' />
@@ -128,7 +124,7 @@ const blog = (
     <Code snippet={Snippets.validation} />
 
     <p>
-        Above we are using <InlineCode code='Driver.combineLatest' /> to combine events from the UITextField Drivers and the sign in button tap. The purpose of this is to exploit a behavior of combine latest that the result observable will not emit an event until both source observables have at least one in order to prevent displaying validation errors before user interaction. Then we <InlineCode code='.flatMapLatest' /> the combined text and tap events passing the string into our validation service's appropriate validation method and return a <InlineCode code='Driver<Validation>' /> that is stored in the output properties defined above.
+        Above we are using <a href='http://reactivex.io/documentation/operators/combinelatest.html'><InlineCode code='Driver.combineLatest' /></a> to combine events from the UITextField Drivers and the sign in button tap. The purpose of this is to exploit a behavior of combine latest that the result observable will not emit an event until both source observables have at least one in order to prevent displaying validation errors before user interaction. Then we <InlineCode code='.flatMapLatest' /> the combined text and tap events passing the string into our validation service's appropriate validation method and return a <InlineCode code='Driver<Validation>' /> that is stored in the output properties defined above.
     </p>
 
     <p>
@@ -164,7 +160,7 @@ const blog = (
     <Code snippet={Snippets.bindSignIn} />
 
     <p>
-        The success state is where the application would presumbaly handle navigating elsewhere or dismissing the sign in in screen if presented modally. In a real world application the response should wrap a more informative error message that can then be displayed to the user  .
+        The success state is where the application would presumbaly handle navigating elsewhere or dismissing the sign in in screen if presented modally. In a real world application the response should wrap a more informative error message that can then be displayed to the user.
     </p>
 
     <h2>Test Drive</h2>

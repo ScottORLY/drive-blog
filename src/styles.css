@@ -1,9 +1,10 @@
-@import url('https://rsms.me/inter/inter.css');
-html { font-family: 'Inter', sans-serif; }
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap');
 
-@supports (font-variation-settings: normal) {
-  html { font-family: 'Inter var', sans-serif; }
-}
+@import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
+
+html { font-family: 'Nunito', sans-serif; }
 
 html { 
   @apply bg-gray-100 text-gray-900
@@ -21,8 +22,8 @@ h2 {
   @apply my-8
 }
 
-h1  {
-  font-family: 'Inter Black', sans-serif;
+h1, h2 {
+  font-family: 'Michroma', sans-serif;
 }
 
 p {
@@ -47,6 +48,7 @@ p {
 }
 
 .code {
+ 
   @apply my-8 text-xs
 }
 
@@ -60,6 +62,10 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+code[class*="language-"], pre[class*="language-"] {
+  font-family: 'Source Code Pro', sans-serif, monospace !important;
 }
 
 @screen md {
