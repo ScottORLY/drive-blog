@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400&display=swap');
 
 @import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
 
@@ -11,24 +11,39 @@ html {
 }
 
 #app {
-    @apply px-1 mb-12 max-w-3xl flex flex-col mx-auto
+    @apply px-1 mb-12 max-w-full flex flex-col mx-auto
 }
 
 .img {
   @apply object-contain max-w-full float-right mx-auto rounded-lg
 }
 
+.fullBleed {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
 h2 {
   @apply my-8
 }
 
+code.centered {
+  @apply block
+}
 h1, h2 {
   font-family: 'Michroma', sans-serif;
 }
 
+.centered {
+  @apply my-3 max-w-3xl mx-auto
+}
+
 p {
   text-indent: 1.5rem;
-  @apply my-3
 }
 
 .gist {
@@ -48,8 +63,13 @@ p {
 }
 
 .code {
- 
-  @apply my-8 text-xs
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  @apply my-12 text-xs
 }
 
 .list {
@@ -82,5 +102,12 @@ code[class*="language-"], pre[class*="language-"] {
   
   .code {
     @apply text-sm
+  }
+}
+
+@media screen and (min-width: 1600px) {
+  .fullBleed {
+    max-width: 1600px;
+    @apply mx-auto static
   }
 }

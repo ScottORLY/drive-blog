@@ -13,7 +13,7 @@ const InlineCode = ({ attributes: { code }}) => (
 const Code = ({ attributes: { snippet }}) => (
     <div className={styles.code}>
         <pre>
-            <code className='language-swift'>
+            <code className={`${styles.centered} language-swift`}>
                 { snippet }
             </code>
         </pre>
@@ -22,67 +22,69 @@ const Code = ({ attributes: { snippet }}) => (
 
 const blog = (
     <div id={styles.app}>
-    <h1><i>Drive</i></h1>
+    <div className={styles.centered}>
+        <h1 className={styles.centered}><i>Drive</i></h1>
 
-    <h2>Functional Reactive Form Validation in iOS with RxSwift</h2>
-    <h4>by <a href='https://github.com/ScottORLY'>Scott Orlyck</a></h4>
+        <h2>Functional Reactive Form Validation in iOS with RxSwift</h2>
+        <h4>by <a href='https://github.com/ScottORLY'>Scott Orlyck</a></h4>
+    </div>
 
-    <img className={styles.img} src='https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/drive.jpg' alt='Ryan Gosling with a Dispose Bag'/>
-    
-    <p>
-        <a href='https://www.youtube.com/watch?v=KBiOF3y1W0Y'>
-            <i>Drive, 2011</i>
-        </a>
-    </p>
-    
-    <h2>Introduction</h2>
+    <img className={styles.fullBleed} src='https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/drive.jpg' alt='Ryan Gosling with a Dispose Bag'/>
+    <div className={styles.centered}>
+        <p>
+            <a href='https://www.youtube.com/watch?v=KBiOF3y1W0Y'>
+                <i>Drive, 2011</i>
+            </a>
+        </p>
+        
+        <h2>Introduction</h2>
 
-    <p>
-        This blog post is intended for readers with some measure of familiarity with iOS development, 
-        functional reactive programming and alternative iOS architecture patterns.
+        <p>
+            This blog post is intended for readers with some measure of familiarity with iOS development, 
+            functional reactive programming and alternative iOS architecture patterns.
 
-        If not here are some resources to get started.
-        <ul className={styles.list}>
-            <li><a href='http://reactivex.io/'>ReactiveX</a></li>
+            If not here are some resources to get started.
+            <ul className={styles.list}>
+                <li><a href='http://reactivex.io/'>ReactiveX</a></li>
 
-            <li><a href='https://github.com/ReactiveX/RxSwift'>RxSwift</a></li>
-            
-            <li><a href='https://www.raywenderlich.com/34-design-patterns-by-tutorials-mvvm'>MVVM</a></li>
-        </ul>
-    </p>
+                <li><a href='https://github.com/ReactiveX/RxSwift'>RxSwift</a></li>
+                
+                <li><a href='https://www.raywenderlich.com/34-design-patterns-by-tutorials-mvvm'>MVVM</a></li>
+            </ul>
+        </p>
 
-    <h2>Why Drive?</h2>
+        <h2>Why Drive?</h2>
 
-    <p>
-        SwiftUI has been getting all the love since it was announced but I want to take some time to write about the productivity benefits of functional reactive programming using RxSwift when combined with the stability of UIKit.
-    </p>
+        <p>
+            SwiftUI has been getting all the love since it was announced but I want to take some time to write about the productivity benefits of functional reactive programming using RxSwift when combined with the stability of UIKit.
+        </p>
 
-    <p>
-        Observables are excellent for escaping target-action, delegate based MVC patterns but even after the steep learning curve remembering tedious boilerplate and dodging footguns can be time consuming and error prone. Furthermore type inference across API boundaries
-        can result in frustrating fights with the Swift compiler.
-    </p>
+        <p>
+            Observables are excellent for escaping target-action, delegate based MVC patterns but even after the steep learning curve remembering tedious boilerplate and dodging footguns can be time consuming and error prone. Furthermore type inference across API boundaries
+            can result in frustrating fights with the Swift compiler.
+        </p>
 
-    <p>
-        An example from the RxSwift documentation is an effective 
-        demonstration of the implementation complexity faced when using Rx with UIKit.
-    </p>
-    
-    <Code snippet={Snippets.example} />
+        <p>
+            An example from the RxSwift documentation is an effective 
+            demonstration of the implementation complexity faced when using Rx with UIKit.
+        </p>
+        
+        <Code snippet={Snippets.example} />
 
-    <p>
-        Thankfully RxSwift provides us with some wrappers around common RxSwift UI patterns that can help simplify implementations. RxSwift calls these wrappers <a hre=''>traits</a> and today we are going to focus on the <a href="https://github.com/ReactiveX/RxSwift/blob/main/Documentation/Traits.md#driver">Driver</a> trait.
-    </p>
+        <p>
+            Thankfully RxSwift provides us with some wrappers around common RxSwift UI patterns that can help simplify implementations. RxSwift calls these wrappers <a hre=''>traits</a> and today we are going to focus on the <a href="https://github.com/ReactiveX/RxSwift/blob/main/Documentation/Traits.md#driver">Driver</a> trait.
+        </p>
 
-    <p>
-        RxSwift Traits are simple structs that implement the builder pattern to return an observable sequence guaranteed to have certain properties. The Driver trait guarantees three properties that happen to be integral to correct UI implementations: events are observed on the main thread, the observable sequence can't error out, and side effects are shared so that each subscription will share the same computational resources.
-    </p>
-
+        <p>
+            RxSwift Traits are simple structs that implement the builder pattern to return an observable sequence guaranteed to have certain properties. The Driver trait guarantees three properties that happen to be integral to correct UI implementations: events are observed on the main thread, the observable sequence can't error out, and side effects are shared so that each subscription will share the same computational resources.
+        </p>
     <Code snippet={Snippets.rxDriver} />
 
     <p className={styles.noIndent}>Let's take a closer look at a practical example.</p>
 
     <h2>Real Time UITextField Validation</h2>
 
+    
     <div>
         <img className={`${styles.img} ${styles.right}`} src='https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/validation.gif' />
         <div>
@@ -173,6 +175,7 @@ const blog = (
 
     <h2>In the Bag</h2>
     <p>That's the post, you can find the completed working project <a href='https://github.com/ScottORLY/drive'>here</a>. Feel free to drop some feedback or questions on <a href='https://twitter.com/orlyck'>Twitter</a> or you can go to the <a href='https://github.com/ScottORLY/drive-blog'>source</a> of this blog post itself and create an issue or pull-request. Until next time.</p>
+    </div>
 </div>
 )
 document.body.appendChild(blog)
