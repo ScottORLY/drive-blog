@@ -26,7 +26,7 @@ const blog = (
         <h1 className={styles.centered}><i>Drive</i></h1>
 
         <h2>Functional Reactive Form Validation in iOS with RxSwift</h2>
-        <h4>by <a href='https://github.com/ScottORLY'>Scott Orlyck</a></h4>
+        <h3>by <a href='https://github.com/ScottORLY'>Scott Orlyck</a></h3>
     </div>
 
     <img className={styles.fullBleed} src='https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/drive.jpg' alt='Ryan Gosling with a Dispose Bag'/>
@@ -60,19 +60,18 @@ const blog = (
         </p>
 
         <p>
-            Observables are excellent for escaping target-action, delegate based MVC patterns but even after the steep learning curve remembering tedious boilerplate and dodging footguns can be time consuming and error prone. Furthermore type inference across API boundaries
-            can result in frustrating fights with the Swift compiler.
+            Observables are an excellent data-binding mechanism when escaping target-action, delegate based MVC patterns but even after the steep learning curve remembering tedious boilerplate and dodging footguns can be time consuming and error prone. Furthermore type inference across API boundaries can result in frustrating fights with the Swift compiler.
         </p>
 
         <p>
             An example from the RxSwift documentation is an effective 
-            demonstration of the implementation complexity faced when using Rx with UIKit.
+            demonstration of the implementation complexity faced when using Rx with UIKit properly.
         </p>
         
         <Code snippet={Snippets.example} />
 
         <p>
-            Thankfully RxSwift provides us with some wrappers around common RxSwift UI patterns that can help simplify implementations. RxSwift calls these wrappers <a hre=''>traits</a> and today we are going to focus on the <a href="https://github.com/ReactiveX/RxSwift/blob/main/Documentation/Traits.md#driver">Driver</a> trait.
+            Thankfully RxSwift provides us with some wrappers around common UI patterns that can help simplify implementations. RxSwift calls these wrappers <a hre='https://github.com/ReactiveX/RxSwift/blob/main/Documentation/Traits.md'>traits</a> and today we are going to focus on the <a href="https://github.com/ReactiveX/RxSwift/blob/main/Documentation/Traits.md#driver">Driver</a> trait.
         </p>
 
         <p>
@@ -83,20 +82,25 @@ const blog = (
     <p className={styles.noIndent}>Let's take a closer look at a practical example.</p>
 
     <h2>Real Time UITextField Validation</h2>
-
     
     <div>
-        <img className={`${styles.img} ${styles.right}`} src='https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/validation.gif' />
+        <img 
+            className={styles.img} 
+            src='https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/validation.gif' 
+            alt='animated gif of text field validation'
+        />
         <div>
             <p>
                 Form validation that provides the user with immediate feedback if a text field meets predefined requirements is a common UX pattern and this example will show you how you can use the Driver trait for effective results with a very small amount of clean, testable code.
             </p>
-
+            <h2>Breaking Zone</h2>
             <p>
                 For the purpose of narrowing the focus of this article I won't be going over project setup, how to connect outlets in storyboards, the basics of RxSwift/RxCocoa etc. I will also be handwaving the networking, validation and network activity tracking utilities as those implementation details are outside the scope of this article. The working project source code is available <a href='https://github.com/ScottORLY/drive'>here</a> if you would like to take a closer look or test a working example on a simulator or device.
             </p>
         </div>
     </div>
+
+    
 
     <p>
         This project will use MVVM but there are a few ground rules to help enforce seperation of concerns:
@@ -129,6 +133,8 @@ const blog = (
         Above we are using <a href='http://reactivex.io/documentation/operators/combinelatest.html'><InlineCode code='Driver.combineLatest' /></a> to combine events from the UITextField Drivers and the sign in button tap. The purpose of this is to exploit a behavior of combine latest that the result observable will not emit an event until both source observables have at least one in order to prevent displaying validation errors before user interaction. Then we <InlineCode code='.flatMapLatest' /> the combined text and tap events passing the string into our validation service's appropriate validation method and return a <InlineCode code='Driver<Validation>' /> that is stored in the output properties defined above.
     </p>
 
+    <h2>Hitting the Apex</h2>
+    
     <p>
         Close the loop by calling <InlineCode code='drive(onNext:)' /> on the output observables in the ViewController. Don't forget to put the results of the <InlineCode code='drive(onNext:)' /> calls in the <InlineCode code='bag' /> or to call <InlineCode code='bind()'/> in <InlineCode code='viewDidLoad()'/>.
     </p>
