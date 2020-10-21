@@ -26,7 +26,7 @@ const blog = (
         <h1 className={styles.centered}><i>Drive</i></h1>
 
         <h2>Functional Reactive Form Validation in iOS with RxSwift</h2>
-        <h3>by <a href='https://github.com/ScottORLY'>Scott Orlyck</a></h3>
+        <h3>by <a href='https://github.com/scottorly'>Scott Orlyck</a></h3>
     </div>
 
     <img className={styles.fullBleed} src='https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/drive.jpg' alt='Ryan Gosling with a Dispose Bag'/>
@@ -168,7 +168,7 @@ const blog = (
     <Code snippet={Snippets.bindSignIn} />
 
     <p>
-        The success state is where the application would presumbaly handle navigating elsewhere or dismissing the sign in in screen if presented modally. In a real world application the response should wrap a more informative error message that can then be displayed to the user.
+        The success state is where the application would presumably handle navigating elsewhere or dismissing the sign in screen if presented modally. In a real world application the response should wrap a more informative error message that can then be displayed to the user should that be th.
     </p>
 
     <h2>Test Drive</h2>
@@ -186,4 +186,5 @@ const blog = (
 )
 document.body.appendChild(blog)
 
+https://drive.google.com/file/d/1RtvWECFoW6vzE9V2AGWDkzzhwk6gf0BT/view?usp=sharing
 Prism.highlightAll()
