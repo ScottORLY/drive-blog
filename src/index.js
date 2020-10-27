@@ -93,7 +93,7 @@ const blog = (
             <p>
                 Form validation that provides the user with immediate feedback if a text field meets predefined requirements is a common UX pattern and this example will show you how you can use the Driver trait for effective results with a very small amount of clean, testable code.
             </p>
-            <h2>Breaking Zone</h2>
+            <h2>Braking Zone</h2>
             <p>
                 For the purpose of narrowing the focus of this article I won't be going over project setup, how to connect outlets in storyboards, the basics of RxSwift/RxCocoa etc. I will also be handwaving the networking, validation and network activity tracking utilities as those implementation details are outside the scope of this article. The working project source code is available <a href='https://github.com/ScottORLY/drive'>here</a> if you would like to take a closer look or test a working example on a simulator or device.
             </p>
@@ -132,8 +132,6 @@ const blog = (
     <p>
         Above we are using <a href='http://reactivex.io/documentation/operators/combinelatest.html'><InlineCode code='Driver.combineLatest' /></a> to combine events from the UITextField Drivers and the sign in button tap. The purpose of this is to exploit a behavior of combine latest that the result observable will not emit an event until both source observables have at least one in order to prevent displaying validation errors before user interaction. Then we <InlineCode code='.flatMapLatest' /> the combined text and tap events passing the string into our validation service's appropriate validation method and return a <InlineCode code='Driver<Validation>' /> that is stored in the output properties defined above.
     </p>
-
-    <h2>Hitting the Apex</h2>
     
     <p>
         Close the loop by calling <InlineCode code='drive(onNext:)' /> on the output observables in the ViewController. Don't forget to put the results of the <InlineCode code='drive(onNext:)' /> calls in the <InlineCode code='bag' /> or to call <InlineCode code='bind()'/> in <InlineCode code='viewDidLoad()'/>.
