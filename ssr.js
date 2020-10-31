@@ -6,7 +6,7 @@ const Webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const webpackConfig = require('./webpack.config.js');
 
-const compiler = Webpack({mode: "development", ...webpackConfig});
+const compiler = Webpack({mode: "production", ...webpackConfig});
 const server = new WebpackDevServer(compiler, webpackConfig.devServer);
 
 const render = async () => {

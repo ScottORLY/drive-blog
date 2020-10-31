@@ -10,8 +10,7 @@ module.exports = {
     ],
     output: {
         path: path.join(__dirname, 'docs'),
-        publicPath: '/drive-blog',
-        filename: 'bundle.js'
+        publicPath: '/drive-blog'
     },
     optimization: {
         splitChunks: {
@@ -33,7 +32,7 @@ module.exports = {
             },
         })
     ],
-    devtool: isDEV ? 'inline-source-map': 'none',
+    // devtool: isDEV ? 'inline-source-map': '(none)',
     module: {
         rules: [
             {
