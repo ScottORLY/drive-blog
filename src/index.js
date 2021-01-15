@@ -9,6 +9,7 @@ const InlineCode = ({ attributes: { code }}) => (
     </span>
 )
 
+const date = new Date()
 
 const Code = ({ attributes: { snippet }}) => (
     <div className={styles.code}>
@@ -24,16 +25,16 @@ const blog = (
     <div id={styles.app}>
     <div className={styles.centered}>
         <h1 className={styles.centered}><i>Drive</i></h1>
-
         <h2>Functional Reactive Form Validation in iOS with RxSwift</h2>
         <h3>by <a href='https://github.com/scottorly'>Scott Orlyck</a></h3>
+        <p>last updated: { date.toLocaleDateString() }</p>
     </div>
 
     <img className={styles.fullBleed} src='https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/drive.jpg' alt='Ryan Gosling with a Dispose Bag'/>
     <div className={styles.centered}>
         <p>
             <a href='https://www.youtube.com/watch?v=KBiOF3y1W0Y'>
-                <i>Drive, 2011</i>
+                <i>Drive</i>
             </a>
         </p>
         
