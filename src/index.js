@@ -30,7 +30,7 @@ const blog = (
         <p>last updated: { date.toLocaleDateString() }</p>
     </div>
 
-    <img className={styles.fullBleed} src='https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/drive.jpg' alt='Ryan Gosling with a Dispose Bag'/>
+    <img className={styles.fullBleed} src='https://raw.githubusercontent.com/ScottORLY/drive-blog/main/src/drive.webp' alt='Ryan Gosling with a Dispose Bag'/>
     <div className={styles.centered}>
         <p>
             <a href='https://www.youtube.com/watch?v=KBiOF3y1W0Y'>
