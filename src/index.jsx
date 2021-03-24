@@ -1,7 +1,7 @@
-import styles from './styles.css'
-
+import styles from './styles.module.css'
 import Prism from 'prismjs'
 import Snippets from './snippets'
+import 'prismjs/components/prism-swift'
 
 const InlineCode = ({ attributes: { code }}) => (
     <span className={styles.inlineCode}>
@@ -167,7 +167,7 @@ const blog = (
     <Code snippet={Snippets.bindSignIn} />
 
     <p>
-        The success state is where the application would presumably handle navigating elsewhere or dismissing the sign in screen if presented modally. In a real world application the response should wrap a more informative error message that can then be displayed to the user should that be th.
+        The success state is where the application would presumably handle navigating elsewhere or dismissing the sign in screen if presented modally. In a real world application the response should wrap a more informative error message that can then be displayed to the user.
     </p>
 
     <h2>Test Drive</h2>
@@ -185,5 +185,5 @@ const blog = (
 )
 document.body.appendChild(blog)
 
-https://drive.google.com/file/d/1RtvWECFoW6vzE9V2AGWDkzzhwk6gf0BT/view?usp=sharing
+
 Prism.highlightAll()

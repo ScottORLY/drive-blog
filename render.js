@@ -1,19 +1,23 @@
 'use strict';
 
 const puppeteer = require('puppeteer');
+const path = require('path');
 const fs = require('fs');
-const Webpack = require('webpack');
-const WebpackDevServer = require('webpack-dev-server');
-const webpackConfig = require('./webpack.config.js');
+const { createServer } = require('vite');
 
-const compiler = Webpack({mode: "production", ...webpackConfig});
-const server = new WebpackDevServer(compiler, webpackConfig.devServer);
-
-const render = async () => {
-  const browser = await puppeteer.launch();
+(async () => {
+  const server = await createServer({
+    root: __dirname,
+    server: {
+      port: 3000
+    }
+  })
+  await server.listen()
+  const browser = await puppeteer.launch({executablePath: '/usr/local/bin/chromium'});
   const page = await browser.newPage();
+
   try {
-    await page.goto('http://localhost:8080/drive-blog', {waitUntil: 'networkidle0'});
+    await page.goto('http://localhost:3000', {waitUntil: 'networkidle0'});
     await page.waitForSelector('div');
 
   } catch (err) {
@@ -28,16 +32,11 @@ const render = async () => {
       });
   });
 
-
   const html = await page.content();
   await browser.close();
 
   fs.writeFile('./docs/index.html', html, () => {
     server.close();
   });
-}
-
-server.listen(8080, 'localhost', () => {
-  render();
-});
+})()
 
